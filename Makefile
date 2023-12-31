@@ -5,10 +5,11 @@ RM = rm -f
 SRCS = test.c
 LIBFT_PATH = ./libft/
 LIBFT = $(LIBFT_PATH)libft.a
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -Imlx -o process
 OPTION = -I ./
-# MLXFLAGS = -Lmlx -lmlx -framework OpenGL -framework AppKit
-MLXFLAGS = -Imlx -L mlx/minilibx_macos/ -lmlx -framework OpenGL -framework AppKit
+MLXFLAGS = -Lmlx -lmlx -framework OpenGL -framework AppKit
+# MLXFLAGS = -Lmlx/minilibx_macos/ -lmlx -framework OpenGL -framework AppKit
+# MLXFLAGS = -L /usr/local/lib -lmlx -framework OpenGL -framework AppKit
 
 OBJS = $(SRCS:.c=.o)
 
