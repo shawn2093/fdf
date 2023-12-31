@@ -67,20 +67,21 @@ int	main(int ac, char **av)
 		exit(EXIT_FAILURE);
 	}
 	char *str = get_next_line(fd);
-	t_list	**input = NULL;
-	t_list *node;
+	t_gnl_list	*input = NULL;
+	t_gnl_list *node;
 	while (str)
 	{
-		node = ft_lstnew(str);
-		ft_printf("%s", node->content);
-		ft_lstadd_back(input, node);
+		node = (t_gnl_list *)malloc(sizeof(t_gnl_list));
+		node->str = ft_strdup(str);
+		node->next = NULL;
+		ft_printf("%s", node->str);
+		ft_lstadd_back_gnl(&input, node);
 		free(str);
-		free(node);
 		str = get_next_line(fd);
 	}
-	char	**splitstr = ft_split((char *) (*input)->content, ' ');
-	int height = ft_lstsize(*input);
-	int	width = sizeof(splitstr[0]);
+	// char	**splitstr = word_count(input->str, ' ');
+	int height = ft_lstsize_gnl(input);
+	int	width = word_count(input->str, ' ');
 	ft_printf("height: %d width: %d", height, width);
 	// node = *input;
 	// ft_printf("done\n");
