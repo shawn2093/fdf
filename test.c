@@ -9,13 +9,11 @@
 #define WIDTH 2000
 #define HEIGHT 1400
 
-void drawline(void *win, void *mlx, int x1, int x2, int y1, int y2, t_point **matrix, int height, int width)
+void drawline(void *win, void *mlx, t_point first, t_point second)
 {
 	// scale, isometric, shift
-	(void) width;
-	(void) height;
-	t_point	a = matrix[x1][y1];
-	t_point	b = matrix[x2][y2];
+	t_point	a = first;
+	t_point	b = second;
 	a.x = a.x * 50;
 	a.y = a.y * 50;
 	b.x = b.x * 50;
@@ -24,20 +22,10 @@ void drawline(void *win, void *mlx, int x1, int x2, int y1, int y2, t_point **ma
 	a.y = (a.x + a.y) * sin(0.8) - a.z + 50;
 	b.x = (b.x - b.y) * cos(0.8) + 50;
 	b.y = (b.x + b.y) * sin(0.8) - b.z + 50;
-	// int a1 = (x11 - y11) * cos(0.8) + 50;
-	// int b1 = ((x11 + y11) * sin(0.8) - matrix[y1][x1]) + 50;
-	// int a2 = (x22 - y22) * cos(0.8) + 50;
-	// int b2 = ((x22 + y22) * sin(0.8) - matrix[y2][x2]) + 50;
-
-	// double a1 = ((x1 - y1) * cos(0.8)) * 50 + 100;
-	// double b1 = ((x1 + y1)) * sin(0.8) - matrix[x1][y1];
-	// double a2 = (x2 - y2) * cos(0.8);
-	// double b2 = ((x2 + y2)) * sin(0.8) - matrix[x2][y2];
 	a.x = a.x + 500;
 	a.y = a.y + 300;
 	b.x = b.x + 500;
 	b.y = b.y + 300;
-	// (void) matrix;
 	int color = 0xffffff;
 	if (a.z || b.z)
 		color = 0xff0000;
@@ -55,35 +43,118 @@ void drawline(void *win, void *mlx, int x1, int x2, int y1, int y2, t_point **ma
 		y = b.y;
 		y_max = a.y;
 	}
-	int dx = x_max - x;
-	int dy = y_max - y;
-	int p = 2 * dx - dy;
-	// while (x <= b.x)
-	while (x <= x_max)
+
+	int step_x = x_max - x;
+	int step_y = y_max - y;
+	int max = MAX(ABS(step_x), ABS(step_y));
+	int i = 0;
+	printf("x: %d y: %d\n", x, y);
+	printf("step_x: %d step_y: %d\n", step_x, step_y);
+	printf("x_max: %d y_max: %d\n", x_max, y_max);
+	printf("MAX: %d\n", max);
+	// while ((int)(x_max - x) || (int)(y_max - y))
+	// {
+	// 	i++;
+	// 	mlx_pixel_put(mlx, win, x, y, color);
+	// 	x = x + (step_x * i) / max;
+	// 	y = y + (step_y * i) / max;
+	// 	printf("x: %d y: %d\n", x, y);
+	// 	if ((step_x * i) / max && (step_y * i) / max)
+	// 		i = 0;
+	// 	if (x < 0 || y < 0 || x > x_max)
+	// 		break ;
+	// }
+
+	while ((int)(x_max - x) || (int)(y_max - y))
 	{
+		i++;
 		mlx_pixel_put(mlx, win, x, y, color);
-		if (x <= x_max)
-			x++;
-		if (p < 0)
-			p = p + 2 * dy;
-		else
-		{
-			p = p + 2 * dy - 2 * dx;
-			// if (y > y_max)
-			// {
-			// 	y = y - 1;
-			// }
-			if (y < y_max)
-			{
-				y++;
-			}
-			// else if (y > y_max)
-			// {
-			// 	printf("minus\n");
-			// 	y--;
-			// }
-		}
+		if (x_max - x)
+			x = x + (step_x * i) / max;
+		if (y_max - y)
+			y = y + (step_y * i) / max;
+		if ((step_x * i) / max && (step_y * i) / max)
+			i = 0;
+		if (x < 0 || y < 0 || x - x_max != 0 || y - y_max != 0)
+			break ;
 	}
+
+	// int dx = ABS(x_max - x);
+	// int dy = -ABS(y_max - x);
+	// int sx = 1;
+	// int sy = 1;
+	// if (x > x_max)
+	// 	sx = -1;
+	// if (y > y_max)
+	// 	sy = -1;
+	// // int p = 2 * dx - dy;
+	// // int p = 2 * dy - dx;
+	// // int i = 0;
+	// int	error = dx + dy;
+	// while (1)
+	// {
+	// 	mlx_pixel_put(mlx, win, x, y, color);
+	// 	if (x == x_max && y == y_max)
+	// 		break ;
+	// 	int e2 = 2 * error;
+	// 	if (e2 >= dy)
+	// 	{
+	// 		if (x == x_max)
+	// 			break ;
+	// 		error = error + dy;
+	// 		x = x + sx;
+	// 	}
+	// 	if (e2 <= dx)
+	// 	{
+	// 		if (y == y_max)
+	// 			break ;
+	// 		error = error + dx;
+	// 		y = y + sy;
+	// 	}
+	// }
+
+
+	// while (x <= x_max)
+	// {
+	// 	mlx_pixel_put(mlx, win, x, y, color);
+	// 	x++;
+	// 	if (p < 0)
+	// 	{
+	// 		i++;
+	// 		p = p + 2 * dy;
+	// 		// if (y < y_max)
+	// 		// {
+	// 		// 	y++;
+	// 		// }
+	// 		if (y > y_max)
+	// 		{
+	// 			y = y + (dy * i / dx);
+	// 			if ((dy * i) / dx != 0)
+	// 				i = 0;
+	// 		}
+	// 	}
+	// 	else
+	// 	{
+	// 		p = p + 2 * dy - 2 * dx;
+	// 		// if (y > y_max)
+	// 		// {
+	// 		// 	y = y - 1;
+	// 		// }
+	// 		if (y < y_max)
+	// 		{
+	// 			y++;
+	// 		}
+	// 		// if (y > y_max)
+	// 		// {
+	// 		// 	y--;
+	// 		// }
+	// 		// else if (y > y_max)
+	// 		// {
+	// 		// 	y--;
+	// 		// }
+	// 	}
+	// }
+
 }
 
 int	main(int ac, char **av)
@@ -97,40 +168,7 @@ int	main(int ac, char **av)
 				WIDTH,
 				HEIGHT,
 				"Pollock");
-	// for (int y = HEIGHT * 0.1; y < HEIGHT * 0.9; ++y)
-	// {
-	// 	for (int x = WIDTH * 0.1; x < WIDTH * 0.9; ++x)
-	// 	{
-	// 		mlx_pixel_put(mlx,
-	// 			win, 
-	// 			x, 
-	// 			y,
-	// 			rand() % 0xffffff);
-	// 	}
-	// }
-
-	// int	x1 = 829;
-	// int	x2 = 259;
-	// int	y1 = 392;
-	// int	y2 = 601;
-
-	// for (int y = y1; y < y2; ++y)
-	// {
-	// 	float x = (y - y1) * (x2 - x1) / (y2 - y1) + x1;
-	// 	mlx_pixel_put(mlx,
-	// 			win, 
-	// 			x, 
-	// 			y,
-	// 			0xffffff);
-	// }
-
-	// mlx_string_put(mlx,
-	// 		win,
-	// 		WIDTH * 0.7,
-	// 		HEIGHT * 0.95,
-	// 		0xff,
-	// 		"POLLOCK");
-	// mlx_loop(mlx);
+	
 	int fd;
 	
 	if (ac != 2)
@@ -204,11 +242,136 @@ int	main(int ac, char **av)
 		while (++j < width)
 		{
 			if (i + 1 != height)
-				drawline(win, mlx, i, i + 1, j, j, matrix, height, width);
+				drawline(win, mlx, matrix[i][j], matrix[i + 1][j]);
+				// drawline(win, mlx, matrix[j][i], matrix[j][i + 1]);
 			if (j + 1 != width)
-				drawline(win, mlx, i, i, j, j + 1, matrix, height, width);
+				drawline(win, mlx, matrix[i][j], matrix[i][j + 1]);
+				// drawline(win, mlx, matrix[j][i], matrix[j + 1][i]);
 		}
 	}
 	mlx_loop(mlx);
 	return (0);
 }
+
+// void print_point(t_point first, t_point second)
+// {
+// 	// scale, isometric, shift
+// 	t_point	a = first;
+// 	t_point	b = second;
+// 	a.x = a.x * 50;
+// 	a.y = a.y * 50;
+// 	b.x = b.x * 50;
+// 	b.y = b.y * 50;
+// 	a.x = (a.x - a.y) * cos(0.8) + 50;
+// 	a.y = (a.x + a.y) * sin(0.8) - a.z + 50;
+// 	b.x = (b.x - b.y) * cos(0.8) + 50;
+// 	b.y = (b.x + b.y) * sin(0.8) - b.z + 50;
+// 	// int a1 = (x11 - y11) * cos(0.8) + 50;
+// 	// int b1 = ((x11 + y11) * sin(0.8) - matrix[y1][x1]) + 50;
+// 	// int a2 = (x22 - y22) * cos(0.8) + 50;
+// 	// int b2 = ((x22 + y22) * sin(0.8) - matrix[y2][x2]) + 50;
+// 	a.x = a.x + 500;
+// 	a.y = a.y + 300;
+// 	b.x = b.x + 500;
+// 	b.y = b.y + 300;
+// 	int color = 0xffffff;
+// 	if (a.z || b.z)
+// 		color = 0xff0000;
+// 	int x = MIN(a.x, b.x);
+// 	int x_max = MAX(a.x, b.x);
+// 	int y;
+// 	int y_max;
+// 	if (x == a.x)
+// 	{
+// 		y = a.y;
+// 		y_max = b.y;
+// 	}
+// 	else
+// 	{
+// 		y = b.y;
+// 		y_max = a.y;
+// 	}
+// 	int dx = x_max - x;
+// 	int dy = y_max - y;
+// 	// int p = 2 * dx - dy;
+// 	int p = 2 * dy - dx;
+// 	int i = 0;
+// 	while (x <= x_max)
+// 	{
+// 		printf("x: %d y: %d\n", x, y);
+// 		x++;
+// 		if (p < 0)
+// 		{
+// 			i++;
+// 			p = p + 2 * dy;
+// 			// if (y < y_max)
+// 			// {
+// 			// 	y++;
+// 			// }
+// 			if (y > y_max)
+// 			{
+// 				y = y + (dy * i / dx);
+// 				if ((dy * i) / dx != 0)
+// 					i = 0;
+// 			}
+// 		}
+// 		else
+// 		{
+// 			p = p + 2 * dy - 2 * dx;
+// 			// if (y > y_max)
+// 			// {
+// 			// 	y = y - 1;
+// 			// }
+// 			if (y < y_max)
+// 			{
+// 				y++;
+// 			}
+// 			// if (y > y_max)
+// 			// {
+// 			// 	y--;
+// 			// }
+// 			// else if (y > y_max)
+// 			// {
+// 			// 	y--;
+// 			// }
+// 		}
+// 	}
+// }
+
+// int	main(void)
+// {
+// 	t_point	a;
+// 	t_point b;
+// 	t_point c;
+// 	t_point d;
+// 	void	*win;
+// 	void	*mlx;
+
+// 	a.x = 0;
+// 	a.y = 0;
+// 	a.z = -6;
+// 	b.x = 1;
+// 	b.y = 0;
+// 	b.z = -67;
+// 	c.x = 0;
+// 	c.y = 1;
+// 	c.z = 27;
+// 	d.x = 1;
+// 	d.y = 1;
+// 	d.z = -63;
+// 	mlx = mlx_init();
+// 	win = mlx_new_window(mlx, 
+// 				WIDTH,
+// 				HEIGHT,
+// 				"Pollock");
+// 	drawline(win, mlx, a, b);
+// 	drawline(win, mlx, a, c);
+// 	drawline(win, mlx, b, d);
+// 	drawline(win, mlx, c, d);
+// 	// printf("a->b: \n");
+// 	// print_point(a, b);
+// 	// printf("b->d: \n");
+// 	// print_point(b, d);
+// 	mlx_loop(mlx);
+// 	return (0);
+// }
