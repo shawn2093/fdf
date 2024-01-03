@@ -4,37 +4,84 @@
 #include "libft/includes/get_next_line.h"
 #include <time.h>
 #include <math.h>
+#include "fdf.h"
 
-#define WIDTH 1000
-#define HEIGHT 700
+#define WIDTH 2000
+#define HEIGHT 1400
 
-void drawline(void *win, void *mlx, int x1, int x2, int y1, int y2, int **matrix)
+void drawline(void *win, void *mlx, int x1, int x2, int y1, int y2, t_point **matrix, int height, int width)
 {
-	// double a1 = ((x1 - y1) * cos(0.8)) * 50 + 100;
-	// double b1 = (((x1 + y1)) * sin(0.8) - matrix[x1][y1]) * 50 + 100;
-	// double a2 = (x2 - y2) * cos(0.8) * 50 + 100;
-	// double b2 = (((x2 + y2)) * sin(0.8) - matrix[x2][y2]) * 50 + 100;
+	// scale, isometric, shift
+	(void) width;
+	(void) height;
+	t_point	a = matrix[x1][y1];
+	t_point	b = matrix[x2][y2];
+	a.x = a.x * 50;
+	a.y = a.y * 50;
+	b.x = b.x * 50;
+	b.y = b.y * 50;
+	a.x = (a.x - a.y) * cos(0.8) + 50;
+	a.y = (a.x + a.y) * sin(0.8) - a.z + 50;
+	b.x = (b.x - b.y) * cos(0.8) + 50;
+	b.y = (b.x + b.y) * sin(0.8) - b.z + 50;
+	// int a1 = (x11 - y11) * cos(0.8) + 50;
+	// int b1 = ((x11 + y11) * sin(0.8) - matrix[y1][x1]) + 50;
+	// int a2 = (x22 - y22) * cos(0.8) + 50;
+	// int b2 = ((x22 + y22) * sin(0.8) - matrix[y2][x2]) + 50;
+
 	// double a1 = ((x1 - y1) * cos(0.8)) * 50 + 100;
 	// double b1 = ((x1 + y1)) * sin(0.8) - matrix[x1][y1];
 	// double a2 = (x2 - y2) * cos(0.8);
 	// double b2 = ((x2 + y2)) * sin(0.8) - matrix[x2][y2];
-	int a1 = x1 * 50 + 100;
-	int b1 = y1 * 50 + 100;
-	int a2 = x2 * 50 + 100;
-	int b2 = y2 * 50 + 100;
-	(void) matrix;
-	for (int y = b1; y < b2; ++y)
+	a.x = a.x + 500;
+	a.y = a.y + 300;
+	b.x = b.x + 500;
+	b.y = b.y + 300;
+	// (void) matrix;
+	int color = 0xffffff;
+	if (a.z || b.z)
+		color = 0xff0000;
+	int x = MIN(a.x, b.x);
+	int x_max = MAX(a.x, b.x);
+	int y;
+	int y_max;
+	if (x == a.x)
 	{
-		if (y2 == y1)
-		{
-			for (int x = a1; x < a2; ++x)
-				mlx_pixel_put(mlx, win, x, y, 0xffffff);
-		}
+		y = a.y;
+		y_max = b.y;
+	}
+	else
+	{
+		y = b.y;
+		y_max = a.y;
+	}
+	int dx = x_max - x;
+	int dy = y_max - y;
+	int p = 2 * dx - dy;
+	// while (x <= b.x)
+	while (x <= x_max)
+	{
+		mlx_pixel_put(mlx, win, x, y, color);
+		if (x <= x_max)
+			x++;
+		if (p < 0)
+			p = p + 2 * dy;
 		else
 		{
-			float	x;
-			x = (y - b1) * (a2 - a1) / (b2 - b1) + a1;
-			mlx_pixel_put(mlx, win, x, y, 0xffffff);
+			p = p + 2 * dy - 2 * dx;
+			// if (y > y_max)
+			// {
+			// 	y = y - 1;
+			// }
+			if (y < y_max)
+			{
+				y++;
+			}
+			// else if (y > y_max)
+			// {
+			// 	printf("minus\n");
+			// 	y--;
+			// }
 		}
 	}
 }
@@ -130,19 +177,21 @@ int	main(int ac, char **av)
 		str = get_next_line(fd);
 	}
 	int height = ft_lstsize_gnl(input);
-	int	**matrix;
-	matrix = (int **) malloc(sizeof(int *) * height);
+	t_point	**matrix;
+	matrix = (t_point **) malloc(sizeof(t_point *) * height);
 	i = -1;
 	int j;
 	node = input;
 	while (++i < height)
 	{
 		j = -1;
-		matrix[i] = (int *) malloc(sizeof(int) * width);
+		matrix[i] = (t_point *) malloc(sizeof(t_point) * width);
 		splitstr = ft_split(node->str, ' ');
 		while (++j < width)
 		{
-			matrix[i][j] = ft_atoi(splitstr[j]);
+			matrix[i][j].x = j;
+			matrix[i][j].y = i;
+			matrix[i][j].z = ft_atoi(splitstr[j]);
 			free(splitstr[j]);
 		}
 		free(splitstr);
@@ -155,12 +204,11 @@ int	main(int ac, char **av)
 		while (++j < width)
 		{
 			if (i + 1 != height)
-				drawline(win, mlx, i, i + 1, j, j, matrix);
+				drawline(win, mlx, i, i + 1, j, j, matrix, height, width);
 			if (j + 1 != width)
-				drawline(win, mlx, i, i, j, j + 1, matrix);
+				drawline(win, mlx, i, i, j, j + 1, matrix, height, width);
 		}
 	}
-	// void drawline(void *win, void *mlx, int x1, int x2, int y1, int y2, int **matrix)
 	mlx_loop(mlx);
 	return (0);
 }
