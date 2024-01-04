@@ -6,8 +6,8 @@
 #include <math.h>
 #include "fdf.h"
 
-#define WIDTH 1000
-#define HEIGHT 700
+#define WIDTH 2000
+#define HEIGHT 1400
 
 int	ft_atoh(const char *str)
 {
@@ -38,38 +38,25 @@ int	ft_atoh(const char *str)
 	return (res * minus_num);
 }
 
-void	img_pix_put(t_img *img, int x, int y, unsigned int color)
-{
-	char	*pixel;
-
-	if (x > 0 && y > 0 && x < WIDTH && y < HEIGHT)
-	{
-		pixel = img->addr + (y * img->line_len + x * (img->bpp / 8));
-		*(unsigned int *)pixel = color;
-	}
-}
-
 // first.x < second.x
-void plotLineLow(t_fdf **fdf, t_point first, t_point second)
+void plotLineLow(t_fdf **fdf, t_point *first, t_point *second)
 {
 	t_bres	a;
 
-	a.dx = second.x - first.x;
-	a.dy = second.y - first.y;
+	a.dx = second->x - first->x;
+	a.dy = second->y - first->y;
 	a.yi = 1;
 	if (a.dy < 0)
 		a.yi = -1;
 	a.dy = ABS(a.dy);
 	a.D = (2 * a.dy) - a.dx;
-	a.y = first.y;
-	a.x = first.x - 1;
-	if (second.z)
-		first.color = second.color;
-	while (++a.x <= second.x)
+	a.y = first->y;
+	a.x = first->x;
+	if (second->z)
+		first->color = second->color;
+	while (a.x <= second->x)
 	{
-		// if ((a.x >= 0 && a.x <= WIDTH) && (a.y >= 0 && a.y <= HEIGHT))
-		// 	mlx_pixel_put((*fdf)->mlx, (*fdf)->win, a.x, a.y, first.color);
-		img_pix_put(&((*fdf)->img), a.x, a.y, (unsigned int) first.color);
+		mlx_pixel_put((*fdf)->mlx, (*fdf)->win, a.x, a.y, first->color);
 		if (a.D > 0)
 		{
 			a.y = a.y + a.yi;
@@ -77,30 +64,29 @@ void plotLineLow(t_fdf **fdf, t_point first, t_point second)
 		}
 		else
 			a.D = a.D + 2 * a.dy;
+		a.x++;
 	}
 }
 
 //first.y < second.y
-void plotLineHigh(t_fdf **fdf, t_point first, t_point second)
+void plotLineHigh(t_fdf **fdf, t_point *first, t_point *second)
 {
 	t_bres	a;
 
-	a.dx = second.x - first.x;
-	a.dy = second.y - first.y;
+	a.dx = second->x - first->x;
+	a.dy = second->y - first->y;
 	a.xi = 1;
 	if (a.dx < 0)
 		a.xi = -1;
 	a.dx = ABS(a.dx);
 	a.D = (2 * a.dx) - a.dy;
-	a.y = first.y - 1;
-	a.x = first.x;
-	if (second.z)
-		first.color = second.color;
-	while (++a.y <= second.y)
+	a.y = first->y;
+	a.x = first->x;
+	if (second->z)
+		first->color = second->color;
+	while (a.y <= second->y)
 	{
-		// if ((a.x >= 0 && a.x <= WIDTH) && (a.y >= 0 && a.y <= HEIGHT))
-		// 	mlx_pixel_put((*fdf)->mlx, (*fdf)->win, a.x, a.y, first.color);
-		img_pix_put(&((*fdf)->img), a.x, a.y, (unsigned int) first.color);
+		mlx_pixel_put((*fdf)->mlx, (*fdf)->win, a.x, a.y, first->color);
 		if (a.D > 0)
 		{
 			a.x = a.x + a.xi;
@@ -108,71 +94,51 @@ void plotLineHigh(t_fdf **fdf, t_point first, t_point second)
 		}
 		else
 			a.D = a.D + 2 * a.dx;
+		a.y++;
 	}
-}
-
-void zoom(t_fdf **fdf)
-{
-	((*fdf)->a).x = ((*fdf)->a).x * (*fdf)->scale;
-	((*fdf)->a).y = ((*fdf)->a).y * (*fdf)->scale;
-	((*fdf)->b).x = ((*fdf)->b).x * (*fdf)->scale;
-	((*fdf)->b).y = ((*fdf)->b).y * (*fdf)->scale;
-	((*fdf)->a).z = ((*fdf)->a).z;
-	((*fdf)->b).z = ((*fdf)->b).z;
-}
-void isometric(t_fdf **fdf)
-{
-	((*fdf)->a).x = (((*fdf)->a).x - ((*fdf)->a).y) * cos(0.8);
-	((*fdf)->a).y = (((*fdf)->a).x + ((*fdf)->a).y) * sin(0.8) - ((*fdf)->a).z;
-	((*fdf)->b).x = (((*fdf)->b).x - ((*fdf)->b).y) * cos(0.8);
-	((*fdf)->b).y = (((*fdf)->b).x + ((*fdf)->b).y) * sin(0.8) - ((*fdf)->b).z;
-}
-
-void move(t_fdf **fdf)
-{
-	((*fdf)->a).x = ((*fdf)->a).x + (*fdf)->move_x;
-	((*fdf)->a).y = ((*fdf)->a).y + (*fdf)->move_y;
-	((*fdf)->b).x = ((*fdf)->b).x + (*fdf)->move_x;
-	((*fdf)->b).y = ((*fdf)->b).y + (*fdf)->move_y;
 }
 
 void plotLine(t_fdf **fdf)
 {
-	int diff_y;
-	int diff_x;
-
-	zoom(fdf);
-	isometric(fdf);
-	move(fdf);
-	diff_y = ((*fdf)->b).y - ((*fdf)->a).y;
-	diff_x = ((*fdf)->b).x - ((*fdf)->a).x;
+	((*fdf)->a)->x = ((*fdf)->a)->x * (*fdf)->scale;
+	((*fdf)->a)->y = ((*fdf)->a)->y * (*fdf)->scale;
+	((*fdf)->b)->x = ((*fdf)->b)->x * (*fdf)->scale;
+	((*fdf)->b)->y = ((*fdf)->b)->y * (*fdf)->scale;
+	((*fdf)->a)->z = ((*fdf)->a)->z;
+	((*fdf)->b)->z = ((*fdf)->b)->z;
+	((*fdf)->a)->x = (((*fdf)->a)->x - ((*fdf)->a)->y) * cos(0.8) + 50;
+	((*fdf)->a)->y = (((*fdf)->a)->x + ((*fdf)->a)->y) * sin(0.8) - ((*fdf)->a)->z + 50;
+	((*fdf)->b)->x = (((*fdf)->b)->x - ((*fdf)->b)->y) * cos(0.8) + 50;
+	((*fdf)->b)->y = (((*fdf)->b)->x + ((*fdf)->b)->y) * sin(0.8) - ((*fdf)->b)->z + 50;
+	((*fdf)->a)->x = ((*fdf)->a)->x + 500 + (*fdf)->move_x;
+	((*fdf)->a)->y = ((*fdf)->a)->y + 300 + (*fdf)->move_y;
+	((*fdf)->b)->x = ((*fdf)->b)->x + 500 + (*fdf)->move_x;
+	((*fdf)->b)->y = ((*fdf)->b)->y + 300 + (*fdf)->move_y;
+	int diff_y = ((*fdf)->b)->y - ((*fdf)->a)->y;
+	int diff_x = ((*fdf)->b)->x - ((*fdf)->a)->x;
 	diff_y = ABS(diff_y);
 	diff_x = ABS(diff_x);
 	if (diff_y < diff_x)
 	{
-		if (((*fdf)->a).x > ((*fdf)->b).x)
+		if (((*fdf)->a)->x > ((*fdf)->b)->x)
 			plotLineLow(fdf, ((*fdf)->b), (*fdf)->a);
 		else
 			plotLineLow(fdf, ((*fdf)->a), ((*fdf)->b));
 	}
 	else
 	{
-		if (((*fdf)->a).y > ((*fdf)->b).y)
+		if (((*fdf)->a)->y > ((*fdf)->b)->y)
 			plotLineHigh(fdf, ((*fdf)->b), ((*fdf)->a));
 		else
 			plotLineHigh(fdf, ((*fdf)->a), ((*fdf)->b));
 	}
 }
 
-int	draw(t_fdf *fdf)
+void	draw(t_fdf *fdf)
 {
 	int	i;
 	int	j;
 
-	fdf->img.mlx_img = mlx_new_image(fdf->mlx, WIDTH, HEIGHT);
-	fdf->img.addr = mlx_get_data_addr(fdf->img.mlx_img, &(fdf->img.bpp), &(fdf->img.line_len), &(fdf->img.endian));
-	// printf("&(fdf->img.bpp): %d &(fdf->img.line_len): %d\n", (fdf->img.bpp), (fdf->img.line_len));
-	mlx_clear_window(fdf->mlx, fdf->win);
 	i = -1;
 	while (++i < fdf->height)
 	{
@@ -181,21 +147,26 @@ int	draw(t_fdf *fdf)
 		{
 			if (i + 1 != fdf->height)
 			{
-				fdf->a = fdf->matrix[i][j];
-				fdf->b = fdf->matrix[i + 1][j];
+				fdf->a->x = j;
+				fdf->a->y = i;
+				fdf->a->z = fdf->matrix[i][j];
+				fdf->b->x = j;
+				fdf->b->y = i + 1;
+				fdf->b->z = fdf->matrix[i + 1][j];
 				plotLine(&fdf);
 			}
 			if (j + 1 != fdf->width)
 			{
-				fdf->a = fdf->matrix[i][j];
-				fdf->b = fdf->matrix[i][j + 1];
+				fdf->a->x = j;
+				fdf->a->y = i;
+				fdf->a->z = fdf->matrix[i][j];
+				fdf->b->x = j + 1;
+				fdf->b->y = i;
+				fdf->b->z = fdf->matrix[i][j + 1];
 				plotLine(&fdf);
 			}
 		}
 	}
-	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img.mlx_img, 0, 0);
-	mlx_destroy_image(fdf->mlx, fdf->img.mlx_img);
-	return (0);
 }
 
 int	handle_keys(int key, t_fdf **fdf)
@@ -213,11 +184,6 @@ int	handle_keys(int key, t_fdf **fdf)
 		(*fdf)->scale += 1;
 	if (key == MINUS_KEY && (*fdf)->scale > 5)
 		(*fdf)->scale -= 1;
-	if (key == ESC_KEY)
-	{
-		mlx_destroy_window((*fdf)->mlx, (*fdf)->win);
-		exit(EXIT_SUCCESS);
-	}
 	mlx_clear_window((*fdf)->mlx, (*fdf)->win);
 	draw(*fdf);
 	return (0);
@@ -281,38 +247,35 @@ int	main(int ac, char **av)
 		str = get_next_line(fd);
 	}
 	fdf->height = ft_lstsize_gnl(input);
-	fdf->matrix = (t_point **) malloc(sizeof(t_point *) * fdf->height);
+	fdf->matrix = (int **) malloc(sizeof(int *) * fdf->height);
 	i = -1;
 	int j;
 	node = input;
+	printf("wait\n");
 	while (++i < fdf->height)
 	{
 		j = -1;
-		fdf->matrix[i] = (t_point *) malloc(sizeof(t_point) * fdf->width);
+		fdf->matrix[i] = (int *) malloc(sizeof(int) * fdf->width);
 		splitstr = ft_split(node->str, ' ');
 		while (++j < fdf->width)
 		{
-			fdf->matrix[i][j].x = j;
-			fdf->matrix[i][j].y = i;
-			fdf->matrix[i][j].z = ft_atoi(splitstr[j]);
-			char	*color = ft_strchr(splitstr[j], ',');
-			if (color)
-				fdf->matrix[i][j].color = ft_atoh(&color[3]);
-			else
-			{
-				if (fdf->matrix[i][j].z == 0)
-					fdf->matrix[i][j].color = 0xffffff;
-				else
-					fdf->matrix[i][j].color = 0xff0000;
-			}
+			fdf->matrix[i][j] = ft_atoi(splitstr[j]);
+			// char	*color = ft_strchr(splitstr[j], ',');
+			// if (color)
+			// 	fdf->matrix[i][j].color = ft_atoh(&color[3]);
+			// else
+			// {
+			// 	if (fdf->matrix[i][j].z == 0)
+			// 		fdf->matrix[i][j].color = 0xffffff;
+			// 	else
+			// 		fdf->matrix[i][j].color = 0xff0000;
+			// }
 			free(splitstr[j]);
 		}
 		free(splitstr);
 		node = node->next;
 	}
-	fdf->scale = 20;
-	fdf->move_x = WIDTH / 2;
-	fdf->move_y = 2 * HEIGHT / 5;
+	fdf->scale = 50;
 	draw(fdf);
 	mlx_key_hook(fdf->win, handle_keys, &fdf);
 	mlx_loop(fdf->mlx);
