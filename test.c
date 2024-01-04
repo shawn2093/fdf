@@ -9,6 +9,35 @@
 #define WIDTH 2000
 #define HEIGHT 1400
 
+int	ft_atoh(const char *str)
+{
+	int	minus_num;
+	int	res;
+
+	minus_num = 1;
+	res = 0;
+	while (*str == '\t' || *str == '\n' || *str == '\v'
+		|| *str == '\f' || *str == '\r' || *str == ' ')
+		str++;
+	if (*str == '-' || *str == '+')
+	{
+		if (*str == '-')
+			minus_num *= -1;
+		str++;
+	}
+	while ((*str >= '0' && *str <= '9') || (*str >= 'a' && *str <= 'f') || (*str >= 'A' && *str <= 'F'))
+	{
+		if (*str >= '0' && *str <= '9')
+			res = res * 16 + *str - '0';
+		else if (*str >= 'a' && *str <= 'f')
+			res = res * 16 + *str - 'a' + 10;
+		else if (*str >= 'A' && *str <= 'F')
+			res = res * 16 + *str - 'A' + 10;
+		str++;
+	}
+	return (res * minus_num);
+}
+
 // void drawline(void *win, void *mlx, t_point first, t_point second)
 // {
 // 	// scale, isometric, shift
@@ -182,7 +211,7 @@
 // }
 
 // first.x < second.x
-void plotLineLow(void *win, void *mlx, t_point first, t_point second)
+void plotLineLow(t_fdf **fdf, t_point first, t_point second)
 {
 	int dx = second.x - first.x;
 	int dy = second.y - first.y;
@@ -195,12 +224,9 @@ void plotLineLow(void *win, void *mlx, t_point first, t_point second)
 	int D = (2 * dy) - dx;
 	int y = first.y;
 	int x = first.x;
-	int color = 0xffffff;
-	if (first.z || second.z)
-		color = 0xff0000;
 	while (x <= second.x)
 	{
-		mlx_pixel_put(mlx, win, x, y, color);
+		mlx_pixel_put((*fdf)->mlx, (*fdf)->win, x, y, first.color);
 		if (D > 0)
 		{
 			y = y + yi;
@@ -211,52 +237,92 @@ void plotLineLow(void *win, void *mlx, t_point first, t_point second)
 		x++;
 	}
 }
-
-plotLineHigh(void *win, void *mlx, t_point first, t_point second)
-(x0, y0, x1, y1)
+//first.y < second.y
+void plotLineHigh(t_fdf **fdf, t_point first, t_point second)
 {
 	int	dx = second.x - first.x;
 	int dy = second.y - first.y;
 	int xi = 1;
+	if (dx < 0)
+	{
+		xi = -1;
+		dx = -dx;
+	}
+	int D = (2 * dx) - dy;
+	int x = first.x;
+	int y = first.y;
+	while (y <= second.y)
+	{
+		mlx_pixel_put((*fdf)->mlx, (*fdf)->win, x, y, first.color);
+		if (D > 0)
+		{
+			x = x + xi;
+			D = D + 2 * (dx - dy);
+		}
+		else
+			D = D + 2 * dx;
+		y++;
+	}
 }
-    dx = x1 - x0
-    dy = y1 - y0
-    xi = 1
-    if dx < 0
-        xi = -1
-        dx = -dx
-    end if
-    D = (2 * dx) - dy
-    x = x0
 
-    for y from y0 to y1
-        plot(x, y)
-        if D > 0
-            x = x + xi
-            D = D + (2 * (dx - dy))
-        else
-            D = D + 2*dx
-        end if
+void plotLine(t_fdf **fdf, t_point first, t_point second)
+{
+	first.x = first.x * 50;
+	first.y = first.y * 50;
+	second.x = second.x * 50;
+	second.y = second.y * 50;
+	first.z = first.z;
+	second.z = second.z;
+	first.x = (first.x - first.y) * cos(0.8) + 50;
+	first.y = (first.x + first.y) * sin(0.8) - first.z + 50;
+	second.x = (second.x - second.y) * cos(0.8) + 50;
+	second.y = (second.x + second.y) * sin(0.8) - second.z + 50;
+	first.x = first.x + 500;
+	first.y = first.y + 300;
+	second.x = second.x + 500;
+	second.y = second.y + 300;
+	int diff_y = second.y - first.y;
+	int diff_x = second.x - first.x;
+	diff_y = ABS(diff_y);
+	diff_x = ABS(diff_x);
+	if (diff_y < diff_x)
+	{
+		if (first.x > second.x)
+			plotLineLow(fdf, second, first);
+		else
+			plotLineLow(fdf, first, second);
+	}
+	else
+	{
+		if (first.y > second.y)
+			plotLineHigh(fdf, second, first);
+		else
+			plotLineHigh(fdf, first, second);
+	}
+
+}
 
 int	main(int ac, char **av)
 {
-	void	*win;
-	void	*mlx;
-
-	// srand(time(NULL));
-	mlx = mlx_init();
-	win = mlx_new_window(mlx, 
-				WIDTH,
-				HEIGHT,
-				"Pollock");
-	
+	t_fdf	*fdf;
 	int fd;
-	
+
 	if (ac != 2)
 	{
 		perror("Usage: ./fdf test_map");
 		exit(EXIT_FAILURE);
 	}
+	fdf = (t_fdf *)malloc(sizeof(t_fdf));
+	if (!fdf)
+	{
+		perror("Malloc fdf failed");
+		exit(EXIT_FAILURE);
+	}
+	fdf->mlx = mlx_init();
+	fdf->win = mlx_new_window(fdf->mlx, 
+				WIDTH,
+				HEIGHT,
+				"Pollock");
 	fd = open(av[1], O_RDONLY);
 	if (fd == -1)
 	{
@@ -311,6 +377,16 @@ int	main(int ac, char **av)
 			matrix[i][j].x = j;
 			matrix[i][j].y = i;
 			matrix[i][j].z = ft_atoi(splitstr[j]);
+			char	*color = ft_strchr(splitstr[j], ',');
+			if (color)
+				matrix[i][j].color = ft_atoh(&color[3]);
+			else
+			{
+				if (matrix[i][j].z)
+					matrix[i][j].color = 0xffffff;
+				else
+					matrix[i][j].color = 0xff0000;
+			}
 			free(splitstr[j]);
 		}
 		free(splitstr);
@@ -323,14 +399,12 @@ int	main(int ac, char **av)
 		while (++j < width)
 		{
 			if (i + 1 != height)
-				drawline(win, mlx, matrix[i][j], matrix[i + 1][j]);
-				// drawline(win, mlx, matrix[j][i], matrix[j][i + 1]);
+				plotLine(&fdf, matrix[i][j], matrix[i + 1][j]);
 			if (j + 1 != width)
-				drawline(win, mlx, matrix[i][j], matrix[i][j + 1]);
-				// drawline(win, mlx, matrix[j][i], matrix[j + 1][i]);
+				plotLine(&fdf, matrix[i][j], matrix[i][j + 1]);
 		}
 	}
-	mlx_loop(mlx);
+	mlx_loop(fdf->mlx);
 	return (0);
 }
 
