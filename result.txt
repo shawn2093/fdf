@@ -1,0 +1,720 @@
+x: 515 y: 397
+step_x: 35 step_y: -13
+x_max: 550 y_max: 384
+MAX: 35
+x: 550 y: 384
+step_x: 34 step_y: 26
+x_max: 584 y_max: 410
+MAX: 34
+x: 550 y: 421
+step_x: 34 step_y: -11
+x_max: 584 y_max: 410
+MAX: 34
+x: 584 y: 410
+step_x: 35 step_y: 25
+x_max: 619 y_max: 435
+MAX: 35
+x: 584 y: 446
+step_x: 35 step_y: -11
+x_max: 619 y_max: 435
+MAX: 35
+x: 619 y: 435
+step_x: 35 step_y: 26
+x_max: 654 y_max: 461
+MAX: 35
+x: 619 y: 471
+step_x: 35 step_y: -10
+x_max: 654 y_max: 461
+MAX: 35
+x: 654 y: 461
+step_x: 35 step_y: 25
+x_max: 689 y_max: 486
+MAX: 35
+x: 654 y: 495
+step_x: 35 step_y: -9
+x_max: 689 y_max: 486
+MAX: 35
+x: 689 y: 486
+step_x: 35 step_y: 24
+x_max: 724 y_max: 510
+MAX: 35
+x: 689 y: 521
+step_x: 35 step_y: -11
+x_max: 724 y_max: 510
+MAX: 35
+x: 724 y: 510
+step_x: 35 step_y: 24
+x_max: 759 y_max: 534
+MAX: 35
+x: 724 y: 546
+step_x: 35 step_y: -12
+x_max: 759 y_max: 534
+MAX: 35
+x: 759 y: 534
+step_x: 34 step_y: 25
+x_max: 793 y_max: 559
+MAX: 34
+x: 759 y: 571
+step_x: 34 step_y: -12
+x_max: 793 y_max: 559
+MAX: 34
+x: 793 y: 559
+step_x: 35 step_y: 26
+x_max: 828 y_max: 585
+MAX: 35
+x: 793 y: 596
+step_x: 35 step_y: -11
+x_max: 828 y_max: 585
+MAX: 35
+x: 828 y: 585
+step_x: 35 step_y: 25
+x_max: 863 y_max: 610
+MAX: 35
+x: 828 y: 621
+step_x: 35 step_y: -11
+x_max: 863 y_max: 610
+MAX: 35
+x: 481 y: 409
+step_x: 34 step_y: -12
+x_max: 515 y_max: 397
+MAX: 34
+x: 515 y: 397
+step_x: 35 step_y: 24
+x_max: 550 y_max: 421
+MAX: 35
+x: 515 y: 431
+step_x: 35 step_y: -10
+x_max: 550 y_max: 421
+MAX: 35
+x: 550 y: 421
+step_x: 34 step_y: 25
+x_max: 584 y_max: 446
+MAX: 34
+x: 550 y: 457
+step_x: 34 step_y: -11
+x_max: 584 y_max: 446
+MAX: 34
+x: 584 y: 446
+step_x: 35 step_y: 25
+x_max: 619 y_max: 471
+MAX: 35
+x: 584 y: 481
+step_x: 35 step_y: -10
+x_max: 619 y_max: 471
+MAX: 35
+x: 619 y: 471
+step_x: 35 step_y: 24
+x_max: 654 y_max: 495
+MAX: 35
+x: 619 y: 508
+step_x: 35 step_y: -13
+x_max: 654 y_max: 495
+MAX: 35
+x: 654 y: 495
+step_x: 35 step_y: 26
+x_max: 689 y_max: 521
+MAX: 35
+x: 654 y: 531
+step_x: 35 step_y: -10
+x_max: 689 y_max: 521
+MAX: 35
+x: 689 y: 521
+step_x: 35 step_y: 25
+x_max: 724 y_max: 546
+MAX: 35
+x: 689 y: 557
+step_x: 35 step_y: -11
+x_max: 724 y_max: 546
+MAX: 35
+x: 724 y: 546
+step_x: 35 step_y: 25
+x_max: 759 y_max: 571
+MAX: 35
+x: 724 y: 582
+step_x: 35 step_y: -11
+x_max: 759 y_max: 571
+MAX: 35
+x: 759 y: 571
+step_x: 34 step_y: 25
+x_max: 793 y_max: 596
+MAX: 34
+x: 759 y: 607
+step_x: 34 step_y: -11
+x_max: 793 y_max: 596
+MAX: 34
+x: 793 y: 596
+step_x: 35 step_y: 25
+x_max: 828 y_max: 621
+MAX: 35
+x: 793 y: 630
+step_x: 35 step_y: -9
+x_max: 828 y_max: 621
+MAX: 35
+x: 446 y: 417
+step_x: 35 step_y: -8
+x_max: 481 y_max: 409
+MAX: 35
+x: 481 y: 409
+step_x: 34 step_y: 22
+x_max: 515 y_max: 431
+MAX: 34
+x: 481 y: 444
+step_x: 34 step_y: -13
+x_max: 515 y_max: 431
+MAX: 34
+x: 515 y: 431
+step_x: 35 step_y: 26
+x_max: 550 y_max: 457
+MAX: 35
+x: 515 y: 468
+step_x: 35 step_y: -11
+x_max: 550 y_max: 457
+MAX: 35
+x: 550 y: 457
+step_x: 34 step_y: 24
+x_max: 584 y_max: 481
+MAX: 34
+x: 550 y: 492
+step_x: 34 step_y: -11
+x_max: 584 y_max: 481
+MAX: 34
+x: 584 y: 481
+step_x: 35 step_y: 27
+x_max: 619 y_max: 508
+MAX: 35
+x: 584 y: 516
+step_x: 35 step_y: -8
+x_max: 619 y_max: 508
+MAX: 35
+x: 619 y: 508
+step_x: 35 step_y: 23
+x_max: 654 y_max: 531
+MAX: 35
+x: 619 y: 543
+step_x: 35 step_y: -12
+x_max: 654 y_max: 531
+MAX: 35
+x: 654 y: 531
+step_x: 35 step_y: 26
+x_max: 689 y_max: 557
+MAX: 35
+x: 654 y: 568
+step_x: 35 step_y: -11
+x_max: 689 y_max: 557
+MAX: 35
+x: 689 y: 557
+step_x: 35 step_y: 25
+x_max: 724 y_max: 582
+MAX: 35
+x: 689 y: 593
+step_x: 35 step_y: -11
+x_max: 724 y_max: 582
+MAX: 35
+x: 724 y: 582
+step_x: 35 step_y: 25
+x_max: 759 y_max: 607
+MAX: 35
+x: 724 y: 619
+step_x: 35 step_y: -12
+x_max: 759 y_max: 607
+MAX: 35
+x: 759 y: 607
+step_x: 34 step_y: 23
+x_max: 793 y_max: 630
+MAX: 34
+x: 759 y: 643
+step_x: 34 step_y: -13
+x_max: 793 y_max: 630
+MAX: 34
+x: 411 y: 428
+step_x: 35 step_y: -11
+x_max: 446 y_max: 417
+MAX: 35
+x: 446 y: 417
+step_x: 35 step_y: 27
+x_max: 481 y_max: 444
+MAX: 35
+x: 446 y: 455
+step_x: 35 step_y: -11
+x_max: 481 y_max: 444
+MAX: 35
+x: 481 y: 444
+step_x: 34 step_y: 24
+x_max: 515 y_max: 468
+MAX: 34
+x: 481 y: 480
+step_x: 34 step_y: -12
+x_max: 515 y_max: 468
+MAX: 34
+x: 515 y: 468
+step_x: 35 step_y: 24
+x_max: 550 y_max: 492
+MAX: 35
+x: 515 y: 504
+step_x: 35 step_y: -12
+x_max: 550 y_max: 492
+MAX: 35
+x: 550 y: 492
+step_x: 34 step_y: 24
+x_max: 584 y_max: 516
+MAX: 34
+x: 550 y: 530
+step_x: 34 step_y: -14
+x_max: 584 y_max: 516
+MAX: 34
+x: 584 y: 516
+step_x: 35 step_y: 27
+x_max: 619 y_max: 543
+MAX: 35
+x: 584 y: 553
+step_x: 35 step_y: -10
+x_max: 619 y_max: 543
+MAX: 35
+x: 619 y: 543
+step_x: 35 step_y: 25
+x_max: 654 y_max: 568
+MAX: 35
+x: 619 y: 578
+step_x: 35 step_y: -10
+x_max: 654 y_max: 568
+MAX: 35
+x: 654 y: 568
+step_x: 35 step_y: 25
+x_max: 689 y_max: 593
+MAX: 35
+x: 654 y: 603
+step_x: 35 step_y: -10
+x_max: 689 y_max: 593
+MAX: 35
+x: 689 y: 593
+step_x: 35 step_y: 26
+x_max: 724 y_max: 619
+MAX: 35
+x: 689 y: 630
+step_x: 35 step_y: -11
+x_max: 724 y_max: 619
+MAX: 35
+x: 724 y: 619
+step_x: 35 step_y: 24
+x_max: 759 y_max: 643
+MAX: 35
+x: 724 y: 655
+step_x: 35 step_y: -12
+x_max: 759 y_max: 643
+MAX: 35
+x: 376 y: 441
+step_x: 35 step_y: -13
+x_max: 411 y_max: 428
+MAX: 35
+x: 411 y: 428
+step_x: 35 step_y: 27
+x_max: 446 y_max: 455
+MAX: 35
+x: 411 y: 464
+step_x: 35 step_y: -9
+x_max: 446 y_max: 455
+MAX: 35
+x: 446 y: 455
+step_x: 35 step_y: 25
+x_max: 481 y_max: 480
+MAX: 35
+x: 446 y: 490
+step_x: 35 step_y: -10
+x_max: 481 y_max: 480
+MAX: 35
+x: 481 y: 480
+step_x: 34 step_y: 24
+x_max: 515 y_max: 504
+MAX: 34
+x: 481 y: 514
+step_x: 34 step_y: -10
+x_max: 515 y_max: 504
+MAX: 34
+x: 515 y: 504
+step_x: 35 step_y: 26
+x_max: 550 y_max: 530
+MAX: 35
+x: 515 y: 539
+step_x: 35 step_y: -9
+x_max: 550 y_max: 530
+MAX: 35
+x: 550 y: 530
+step_x: 34 step_y: 23
+x_max: 584 y_max: 553
+MAX: 34
+x: 550 y: 565
+step_x: 34 step_y: -12
+x_max: 584 y_max: 553
+MAX: 34
+x: 584 y: 553
+step_x: 35 step_y: 25
+x_max: 619 y_max: 578
+MAX: 35
+x: 584 y: 588
+step_x: 35 step_y: -10
+x_max: 619 y_max: 578
+MAX: 35
+x: 619 y: 578
+step_x: 35 step_y: 25
+x_max: 654 y_max: 603
+MAX: 35
+x: 619 y: 614
+step_x: 35 step_y: -11
+x_max: 654 y_max: 603
+MAX: 35
+x: 654 y: 603
+step_x: 35 step_y: 27
+x_max: 689 y_max: 630
+MAX: 35
+x: 654 y: 639
+step_x: 35 step_y: -9
+x_max: 689 y_max: 630
+MAX: 35
+x: 689 y: 630
+step_x: 35 step_y: 25
+x_max: 724 y_max: 655
+MAX: 35
+x: 689 y: 664
+step_x: 35 step_y: -9
+x_max: 724 y_max: 655
+MAX: 35
+x: 341 y: 451
+step_x: 35 step_y: -10
+x_max: 376 y_max: 441
+MAX: 35
+x: 376 y: 441
+step_x: 35 step_y: 23
+x_max: 411 y_max: 464
+MAX: 35
+x: 376 y: 477
+step_x: 35 step_y: -13
+x_max: 411 y_max: 464
+MAX: 35
+x: 411 y: 464
+step_x: 35 step_y: 26
+x_max: 446 y_max: 490
+MAX: 35
+x: 411 y: 502
+step_x: 35 step_y: -12
+x_max: 446 y_max: 490
+MAX: 35
+x: 446 y: 490
+step_x: 35 step_y: 24
+x_max: 481 y_max: 514
+MAX: 35
+x: 446 y: 526
+step_x: 35 step_y: -12
+x_max: 481 y_max: 514
+MAX: 35
+x: 481 y: 514
+step_x: 34 step_y: 25
+x_max: 515 y_max: 539
+MAX: 34
+x: 481 y: 551
+step_x: 34 step_y: -12
+x_max: 515 y_max: 539
+MAX: 34
+x: 515 y: 539
+step_x: 35 step_y: 26
+x_max: 550 y_max: 565
+MAX: 35
+x: 515 y: 574
+step_x: 35 step_y: -9
+x_max: 550 y_max: 565
+MAX: 35
+x: 550 y: 565
+step_x: 34 step_y: 23
+x_max: 584 y_max: 588
+MAX: 34
+x: 550 y: 601
+step_x: 34 step_y: -13
+x_max: 584 y_max: 588
+MAX: 34
+x: 584 y: 588
+step_x: 35 step_y: 26
+x_max: 619 y_max: 614
+MAX: 35
+x: 584 y: 625
+step_x: 35 step_y: -11
+x_max: 619 y_max: 614
+MAX: 35
+x: 619 y: 614
+step_x: 35 step_y: 25
+x_max: 654 y_max: 639
+MAX: 35
+x: 619 y: 650
+step_x: 35 step_y: -11
+x_max: 654 y_max: 639
+MAX: 35
+x: 654 y: 639
+step_x: 35 step_y: 25
+x_max: 689 y_max: 664
+MAX: 35
+x: 654 y: 674
+step_x: 35 step_y: -10
+x_max: 689 y_max: 664
+MAX: 35
+x: 307 y: 462
+step_x: 34 step_y: -11
+x_max: 341 y_max: 451
+MAX: 34
+x: 341 y: 451
+step_x: 35 step_y: 26
+x_max: 376 y_max: 477
+MAX: 35
+x: 341 y: 487
+step_x: 35 step_y: -10
+x_max: 376 y_max: 477
+MAX: 35
+x: 376 y: 477
+step_x: 35 step_y: 25
+x_max: 411 y_max: 502
+MAX: 35
+x: 376 y: 512
+step_x: 35 step_y: -10
+x_max: 411 y_max: 502
+MAX: 35
+x: 411 y: 502
+step_x: 35 step_y: 24
+x_max: 446 y_max: 526
+MAX: 35
+x: 411 y: 537
+step_x: 35 step_y: -11
+x_max: 446 y_max: 526
+MAX: 35
+x: 446 y: 526
+step_x: 35 step_y: 25
+x_max: 481 y_max: 551
+MAX: 35
+x: 446 y: 561
+step_x: 35 step_y: -10
+x_max: 481 y_max: 551
+MAX: 35
+x: 481 y: 551
+step_x: 34 step_y: 23
+x_max: 515 y_max: 574
+MAX: 34
+x: 481 y: 587
+step_x: 34 step_y: -13
+x_max: 515 y_max: 574
+MAX: 34
+x: 515 y: 574
+step_x: 35 step_y: 27
+x_max: 550 y_max: 601
+MAX: 35
+x: 515 y: 612
+step_x: 35 step_y: -11
+x_max: 550 y_max: 601
+MAX: 35
+x: 550 y: 601
+step_x: 34 step_y: 24
+x_max: 584 y_max: 625
+MAX: 34
+x: 550 y: 636
+step_x: 34 step_y: -11
+x_max: 584 y_max: 625
+MAX: 34
+x: 584 y: 625
+step_x: 35 step_y: 25
+x_max: 619 y_max: 650
+MAX: 35
+x: 584 y: 661
+step_x: 35 step_y: -11
+x_max: 619 y_max: 650
+MAX: 35
+x: 619 y: 650
+step_x: 35 step_y: 24
+x_max: 654 y_max: 674
+MAX: 35
+x: 619 y: 686
+step_x: 35 step_y: -12
+x_max: 654 y_max: 674
+MAX: 35
+x: 272 y: 474
+step_x: 35 step_y: -12
+x_max: 307 y_max: 462
+MAX: 35
+x: 307 y: 462
+step_x: 34 step_y: 25
+x_max: 341 y_max: 487
+MAX: 34
+x: 307 y: 499
+step_x: 34 step_y: -12
+x_max: 341 y_max: 487
+MAX: 34
+x: 341 y: 487
+step_x: 35 step_y: 25
+x_max: 376 y_max: 512
+MAX: 35
+x: 341 y: 522
+step_x: 35 step_y: -10
+x_max: 376 y_max: 512
+MAX: 35
+x: 376 y: 512
+step_x: 35 step_y: 25
+x_max: 411 y_max: 537
+MAX: 35
+x: 376 y: 546
+step_x: 35 step_y: -9
+x_max: 411 y_max: 537
+MAX: 35
+x: 411 y: 537
+step_x: 35 step_y: 24
+x_max: 446 y_max: 561
+MAX: 35
+x: 411 y: 574
+step_x: 35 step_y: -13
+x_max: 446 y_max: 561
+MAX: 35
+x: 446 y: 561
+step_x: 35 step_y: 26
+x_max: 481 y_max: 587
+MAX: 35
+x: 446 y: 598
+step_x: 35 step_y: -11
+x_max: 481 y_max: 587
+MAX: 35
+x: 481 y: 587
+step_x: 34 step_y: 25
+x_max: 515 y_max: 612
+MAX: 34
+x: 481 y: 622
+step_x: 34 step_y: -10
+x_max: 515 y_max: 612
+MAX: 34
+x: 515 y: 612
+step_x: 35 step_y: 24
+x_max: 550 y_max: 636
+MAX: 35
+x: 515 y: 647
+step_x: 35 step_y: -11
+x_max: 550 y_max: 636
+MAX: 35
+x: 550 y: 636
+step_x: 34 step_y: 25
+x_max: 584 y_max: 661
+MAX: 34
+x: 550 y: 672
+step_x: 34 step_y: -11
+x_max: 584 y_max: 661
+MAX: 34
+x: 584 y: 661
+step_x: 35 step_y: 25
+x_max: 619 y_max: 686
+MAX: 35
+x: 584 y: 696
+step_x: 35 step_y: -10
+x_max: 619 y_max: 686
+MAX: 35
+x: 237 y: 484
+step_x: 35 step_y: -10
+x_max: 272 y_max: 474
+MAX: 35
+x: 272 y: 474
+step_x: 35 step_y: 25
+x_max: 307 y_max: 499
+MAX: 35
+x: 272 y: 509
+step_x: 35 step_y: -10
+x_max: 307 y_max: 499
+MAX: 35
+x: 307 y: 499
+step_x: 34 step_y: 23
+x_max: 341 y_max: 522
+MAX: 34
+x: 307 y: 533
+step_x: 34 step_y: -11
+x_max: 341 y_max: 522
+MAX: 34
+x: 341 y: 522
+step_x: 35 step_y: 24
+x_max: 376 y_max: 546
+MAX: 35
+x: 341 y: 559
+step_x: 35 step_y: -13
+x_max: 376 y_max: 546
+MAX: 35
+x: 376 y: 546
+step_x: 35 step_y: 28
+x_max: 411 y_max: 574
+MAX: 35
+x: 376 y: 583
+step_x: 35 step_y: -9
+x_max: 411 y_max: 574
+MAX: 35
+x: 411 y: 574
+step_x: 35 step_y: 24
+x_max: 446 y_max: 598
+MAX: 35
+x: 411 y: 609
+step_x: 35 step_y: -11
+x_max: 446 y_max: 598
+MAX: 35
+x: 446 y: 598
+step_x: 35 step_y: 24
+x_max: 481 y_max: 622
+MAX: 35
+x: 446 y: 634
+step_x: 35 step_y: -12
+x_max: 481 y_max: 622
+MAX: 35
+x: 481 y: 622
+step_x: 34 step_y: 25
+x_max: 515 y_max: 647
+MAX: 34
+x: 481 y: 659
+step_x: 34 step_y: -12
+x_max: 515 y_max: 647
+MAX: 34
+x: 515 y: 647
+step_x: 35 step_y: 25
+x_max: 550 y_max: 672
+MAX: 35
+x: 515 y: 683
+step_x: 35 step_y: -11
+x_max: 550 y_max: 672
+MAX: 35
+x: 550 y: 672
+step_x: 34 step_y: 24
+x_max: 584 y_max: 696
+MAX: 34
+x: 550 y: 708
+step_x: 34 step_y: -12
+x_max: 584 y_max: 696
+MAX: 34
+x: 237 y: 484
+step_x: 35 step_y: 25
+x_max: 272 y_max: 509
+MAX: 35
+x: 272 y: 509
+step_x: 35 step_y: 24
+x_max: 307 y_max: 533
+MAX: 35
+x: 307 y: 533
+step_x: 34 step_y: 26
+x_max: 341 y_max: 559
+MAX: 34
+x: 341 y: 559
+step_x: 35 step_y: 24
+x_max: 376 y_max: 583
+MAX: 35
+x: 376 y: 583
+step_x: 35 step_y: 26
+x_max: 411 y_max: 609
+MAX: 35
+x: 411 y: 609
+step_x: 35 step_y: 25
+x_max: 446 y_max: 634
+MAX: 35
+x: 446 y: 634
+step_x: 35 step_y: 25
+x_max: 481 y_max: 659
+MAX: 35
+x: 481 y: 659
+step_x: 34 step_y: 24
+x_max: 515 y_max: 683
+MAX: 34
+x: 515 y: 683
+step_x: 35 step_y: 25
+x_max: 550 y_max: 708
+MAX: 35

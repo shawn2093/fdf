@@ -9,153 +9,234 @@
 #define WIDTH 2000
 #define HEIGHT 1400
 
-void drawline(void *win, void *mlx, t_point first, t_point second)
+// void drawline(void *win, void *mlx, t_point first, t_point second)
+// {
+// 	// scale, isometric, shift
+// 	t_point	a = first;
+// 	t_point	b = second;
+// 	a.x = a.x * 50;
+// 	a.y = a.y * 50;
+// 	b.x = b.x * 50;
+// 	b.y = b.y * 50;
+// 	a.x = (a.x - a.y) * cos(0.8) + 50;
+// 	a.y = (a.x + a.y) * sin(0.8) - a.z + 50;
+// 	b.x = (b.x - b.y) * cos(0.8) + 50;
+// 	b.y = (b.x + b.y) * sin(0.8) - b.z + 50;
+// 	a.x = a.x + 500;
+// 	a.y = a.y + 300;
+// 	b.x = b.x + 500;
+// 	b.y = b.y + 300;
+// 	int color = 0xffffff;
+// 	if (a.z || b.z)
+// 		color = 0xff0000;
+// 	int x = MIN(a.x, b.x);
+// 	int x_max = MAX(a.x, b.x);
+// 	int y;
+// 	int y_max;
+// 	if (x == a.x)
+// 	{
+// 		y = a.y;
+// 		y_max = b.y;
+// 	}
+// 	else
+// 	{
+// 		y = b.y;
+// 		y_max = a.y;
+// 	}
+
+// 	float	step_x;
+// 	float	step_y;
+// 	float	max;
+// 	float	x_float = (float) x;
+// 	float 	y_float = (float) y;
+// 	step_x = b.x - a.x;
+// 	step_y = b.y - a.y;
+// 	max = MAX(ABS(step_x), ABS(step_y));
+// 	step_x /= max;
+// 	step_y /= max;
+// 	while ((int)(x_float - x_max) || (int)(y_float - y_max))
+// 	{
+// 		mlx_pixel_put(mlx, win, x_float, y_float, color);
+// 		x_float = x_float + step_x;
+// 		y_float = y_float + step_y;
+// 		if (x_float > WIDTH || y_float > HEIGHT || x_float < 0 || y_float < 0)
+// 			break ;
+// 	}
+
+// 	// int step_x = x_max - x;
+// 	// int step_y = y_max - y;
+// 	// int max = MAX(ABS(step_x), ABS(step_y));
+// 	// int i = 0;
+// 	// int j = 0;
+// 	// printf("x: %d y: %d\n", x, y);
+// 	// printf("step_x: %d step_y: %d\n", step_x, step_y);
+// 	// printf("x_max: %d y_max: %d\n", x_max, y_max);
+// 	// printf("MAX: %d\n", max);
+// 	// while ((int)(x_max - x) || (int)(y_max - y))
+// 	// {
+// 	// 	i++;
+// 	// 	mlx_pixel_put(mlx, win, x, y, color);
+// 	// 	x = x + (step_x * i) / max;
+// 	// 	y = y + (step_y * i) / max;
+// 	// 	printf("x: %d y: %d\n", x, y);
+// 	// 	if ((step_x * i) / max && (step_y * i) / max)
+// 	// 		i = 0;
+// 	// 	if (x < 0 || y < 0 || x > x_max)
+// 	// 		break ;
+// 	// }
+
+// 	// while ((int)(x_max - x) || (int)(y_max - y))
+// 	// {
+// 	// 	i++;
+// 	// 	j++;
+// 	// 	mlx_pixel_put(mlx, win, x, y, color);
+// 	// 	x = x + (step_x * i) / max;
+// 	// 	y = y + (step_y * j) / max;
+// 	// 	if ((step_x * i) / max)
+// 	// 		i = 0;
+// 	// 	if ((step_y * j) / max)
+// 	// 		j = 0;
+// 	// 	if (x < 0 || y < 0 || x > x_max || (y <= y_max && y + 1 > y_max) || (y >= y_max && y - 1 < y_max))
+// 	// 		break ;
+// 	// }
+
+// 	// int dx = ABS(x_max - x);
+// 	// int dy = -ABS(y_max - x);
+// 	// int sx = 1;
+// 	// int sy = 1;
+// 	// if (x > x_max)
+// 	// 	sx = -1;
+// 	// if (y > y_max)
+// 	// 	sy = -1;
+// 	// // int p = 2 * dx - dy;
+// 	// // int p = 2 * dy - dx;
+// 	// // int i = 0;
+// 	// int	error = dx + dy;
+// 	// while (1)
+// 	// {
+// 	// 	mlx_pixel_put(mlx, win, x, y, color);
+// 	// 	if (x == x_max && y == y_max)
+// 	// 		break ;
+// 	// 	int e2 = 2 * error;
+// 	// 	if (e2 >= dy)
+// 	// 	{
+// 	// 		if (x == x_max)
+// 	// 			break ;
+// 	// 		error = error + dy;
+// 	// 		x = x + sx;
+// 	// 	}
+// 	// 	if (e2 <= dx)
+// 	// 	{
+// 	// 		if (y == y_max)
+// 	// 			break ;
+// 	// 		error = error + dx;
+// 	// 		y = y + sy;
+// 	// 	}
+// 	// }
+
+// 	// int	i = 0;
+// 	// int dx = x_max - x;
+// 	// int dy = y_max - y;
+// 	// int p = 2 *dy - dx;
+// 	// while (x <= x_max)
+// 	// {
+// 	// 	mlx_pixel_put(mlx, win, x, y, color);
+// 	// 	x++;
+// 	// 	if (p < 0)
+// 	// 	{
+// 	// 		i++;
+// 	// 		p = p + 2 * dy;
+// 	// 		// if (y < y_max)
+// 	// 		// {
+// 	// 		// 	y++;
+// 	// 		// }
+// 	// 		if (y > y_max)
+// 	// 		{
+// 	// 			y = y + (dy * i / dx);
+// 	// 			if ((dy * i) / dx != 0)
+// 	// 				i = 0;
+// 	// 		}
+// 	// 	}
+// 	// 	else
+// 	// 	{
+// 	// 		p = p + 2 * dy - 2 * dx;
+// 	// 		// if (y > y_max)
+// 	// 		// {
+// 	// 		// 	y = y - 1;
+// 	// 		// }
+// 	// 		if (y < y_max)
+// 	// 		{
+// 	// 			y++;
+// 	// 		}
+// 	// 		// if (y > y_max)
+// 	// 		// {
+// 	// 		// 	y--;
+// 	// 		// }
+// 	// 		// else if (y > y_max)
+// 	// 		// {
+// 	// 		// 	y--;
+// 	// 		// }
+// 	// 	}
+// 	// }
+
+// }
+
+// first.x < second.x
+void plotLineLow(void *win, void *mlx, t_point first, t_point second)
 {
-	// scale, isometric, shift
-	t_point	a = first;
-	t_point	b = second;
-	a.x = a.x * 50;
-	a.y = a.y * 50;
-	b.x = b.x * 50;
-	b.y = b.y * 50;
-	a.x = (a.x - a.y) * cos(0.8) + 50;
-	a.y = (a.x + a.y) * sin(0.8) - a.z + 50;
-	b.x = (b.x - b.y) * cos(0.8) + 50;
-	b.y = (b.x + b.y) * sin(0.8) - b.z + 50;
-	a.x = a.x + 500;
-	a.y = a.y + 300;
-	b.x = b.x + 500;
-	b.y = b.y + 300;
+	int dx = second.x - first.x;
+	int dy = second.y - first.y;
+	int yi = 1;
+	if (dy < 0)
+	{
+		yi = -1;
+		dy = -dy;
+	}
+	int D = (2 * dy) - dx;
+	int y = first.y;
+	int x = first.x;
 	int color = 0xffffff;
-	if (a.z || b.z)
+	if (first.z || second.z)
 		color = 0xff0000;
-	int x = MIN(a.x, b.x);
-	int x_max = MAX(a.x, b.x);
-	int y;
-	int y_max;
-	if (x == a.x)
+	while (x <= second.x)
 	{
-		y = a.y;
-		y_max = b.y;
-	}
-	else
-	{
-		y = b.y;
-		y_max = a.y;
-	}
-
-	int step_x = x_max - x;
-	int step_y = y_max - y;
-	int max = MAX(ABS(step_x), ABS(step_y));
-	int i = 0;
-	printf("x: %d y: %d\n", x, y);
-	printf("step_x: %d step_y: %d\n", step_x, step_y);
-	printf("x_max: %d y_max: %d\n", x_max, y_max);
-	printf("MAX: %d\n", max);
-	// while ((int)(x_max - x) || (int)(y_max - y))
-	// {
-	// 	i++;
-	// 	mlx_pixel_put(mlx, win, x, y, color);
-	// 	x = x + (step_x * i) / max;
-	// 	y = y + (step_y * i) / max;
-	// 	printf("x: %d y: %d\n", x, y);
-	// 	if ((step_x * i) / max && (step_y * i) / max)
-	// 		i = 0;
-	// 	if (x < 0 || y < 0 || x > x_max)
-	// 		break ;
-	// }
-
-	while ((int)(x_max - x) || (int)(y_max - y))
-	{
-		i++;
 		mlx_pixel_put(mlx, win, x, y, color);
-		if (x_max - x)
-			x = x + (step_x * i) / max;
-		if (y_max - y)
-			y = y + (step_y * i) / max;
-		if ((step_x * i) / max && (step_y * i) / max)
-			i = 0;
-		if (x < 0 || y < 0 || x - x_max != 0 || y - y_max != 0)
-			break ;
+		if (D > 0)
+		{
+			y = y + yi;
+			D = D + 2 * (dy - dx);
+		}
+		else
+			D = D + 2 * dy;
+		x++;
 	}
-
-	// int dx = ABS(x_max - x);
-	// int dy = -ABS(y_max - x);
-	// int sx = 1;
-	// int sy = 1;
-	// if (x > x_max)
-	// 	sx = -1;
-	// if (y > y_max)
-	// 	sy = -1;
-	// // int p = 2 * dx - dy;
-	// // int p = 2 * dy - dx;
-	// // int i = 0;
-	// int	error = dx + dy;
-	// while (1)
-	// {
-	// 	mlx_pixel_put(mlx, win, x, y, color);
-	// 	if (x == x_max && y == y_max)
-	// 		break ;
-	// 	int e2 = 2 * error;
-	// 	if (e2 >= dy)
-	// 	{
-	// 		if (x == x_max)
-	// 			break ;
-	// 		error = error + dy;
-	// 		x = x + sx;
-	// 	}
-	// 	if (e2 <= dx)
-	// 	{
-	// 		if (y == y_max)
-	// 			break ;
-	// 		error = error + dx;
-	// 		y = y + sy;
-	// 	}
-	// }
-
-
-	// while (x <= x_max)
-	// {
-	// 	mlx_pixel_put(mlx, win, x, y, color);
-	// 	x++;
-	// 	if (p < 0)
-	// 	{
-	// 		i++;
-	// 		p = p + 2 * dy;
-	// 		// if (y < y_max)
-	// 		// {
-	// 		// 	y++;
-	// 		// }
-	// 		if (y > y_max)
-	// 		{
-	// 			y = y + (dy * i / dx);
-	// 			if ((dy * i) / dx != 0)
-	// 				i = 0;
-	// 		}
-	// 	}
-	// 	else
-	// 	{
-	// 		p = p + 2 * dy - 2 * dx;
-	// 		// if (y > y_max)
-	// 		// {
-	// 		// 	y = y - 1;
-	// 		// }
-	// 		if (y < y_max)
-	// 		{
-	// 			y++;
-	// 		}
-	// 		// if (y > y_max)
-	// 		// {
-	// 		// 	y--;
-	// 		// }
-	// 		// else if (y > y_max)
-	// 		// {
-	// 		// 	y--;
-	// 		// }
-	// 	}
-	// }
-
 }
+
+plotLineHigh(void *win, void *mlx, t_point first, t_point second)
+(x0, y0, x1, y1)
+{
+	int	dx = second.x - first.x;
+	int dy = second.y - first.y;
+	int xi = 1;
+}
+    dx = x1 - x0
+    dy = y1 - y0
+    xi = 1
+    if dx < 0
+        xi = -1
+        dx = -dx
+    end if
+    D = (2 * dx) - dy
+    x = x0
+
+    for y from y0 to y1
+        plot(x, y)
+        if D > 0
+            x = x + xi
+            D = D + (2 * (dx - dy))
+        else
+            D = D + 2*dx
+        end if
 
 int	main(int ac, char **av)
 {
