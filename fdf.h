@@ -12,6 +12,14 @@
 # define PLUS_KEY 24
 # define MINUS_KEY 27
 # define ESC_KEY 53
+# define LEFT_BRACKET_KEY 30
+# define RIGHT_BRACKET_KEY 33
+# define A_KEY 0
+# define D_KEY 2
+# define W_KEY 13
+# define S_KEY 1
+# define Q_KEY 12
+# define E_KEY 14
 
 typedef struct s_img
 {
@@ -51,6 +59,10 @@ typedef struct s_fdf
     int     move_x;
     int     move_y;
     int     scale;
+    int     scale_z;
+    double  angle_x;
+    double  angle_y;
+    double  angle_z;
     t_point a;
     t_point b;
     t_img   img;

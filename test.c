@@ -67,8 +67,6 @@ void plotLineLow(t_fdf **fdf, t_point first, t_point second)
 		first.color = second.color;
 	while (++a.x <= second.x)
 	{
-		// if ((a.x >= 0 && a.x <= WIDTH) && (a.y >= 0 && a.y <= HEIGHT))
-		// 	mlx_pixel_put((*fdf)->mlx, (*fdf)->win, a.x, a.y, first.color);
 		img_pix_put(&((*fdf)->img), a.x, a.y, (unsigned int) first.color);
 		if (a.D > 0)
 		{
@@ -98,8 +96,6 @@ void plotLineHigh(t_fdf **fdf, t_point first, t_point second)
 		first.color = second.color;
 	while (++a.y <= second.y)
 	{
-		// if ((a.x >= 0 && a.x <= WIDTH) && (a.y >= 0 && a.y <= HEIGHT))
-		// 	mlx_pixel_put((*fdf)->mlx, (*fdf)->win, a.x, a.y, first.color);
 		img_pix_put(&((*fdf)->img), a.x, a.y, (unsigned int) first.color);
 		if (a.D > 0)
 		{
@@ -117,8 +113,8 @@ void zoom(t_fdf **fdf)
 	((*fdf)->a).y = ((*fdf)->a).y * (*fdf)->scale;
 	((*fdf)->b).x = ((*fdf)->b).x * (*fdf)->scale;
 	((*fdf)->b).y = ((*fdf)->b).y * (*fdf)->scale;
-	((*fdf)->a).z = ((*fdf)->a).z;
-	((*fdf)->b).z = ((*fdf)->b).z;
+	((*fdf)->a).z = ((*fdf)->a).z * (*fdf)->scale_z;
+	((*fdf)->b).z = ((*fdf)->b).z * (*fdf)->scale_z;
 }
 void isometric(t_fdf **fdf)
 {
@@ -136,12 +132,75 @@ void move(t_fdf **fdf)
 	((*fdf)->b).y = ((*fdf)->b).y + (*fdf)->move_y;
 }
 
+void rotate_x(t_fdf **fdf)
+{
+	int	tmp_x;
+	int	tmp_y;
+	int	tmp_z;
+
+	tmp_x = ((*fdf)->a).x;
+	tmp_y = ((*fdf)->a).y * cos((*fdf)->angle_x) - ((*fdf)->a).z * sin((*fdf)->angle_x);
+	tmp_z = ((*fdf)->a).y * sin((*fdf)->angle_x) + ((*fdf)->a).z * cos((*fdf)->angle_x);
+	((*fdf)->a).x = tmp_x;
+	((*fdf)->a).y = tmp_y;
+	((*fdf)->a).z = tmp_z;
+	tmp_x = ((*fdf)->b).x;
+	tmp_y = ((*fdf)->b).y * cos((*fdf)->angle_x) - ((*fdf)->b).z * sin((*fdf)->angle_x);
+	tmp_z = ((*fdf)->b).y * sin((*fdf)->angle_x) + ((*fdf)->b).z * cos((*fdf)->angle_x);
+	((*fdf)->b).x = tmp_x;
+	((*fdf)->b).y = tmp_y;
+	((*fdf)->b).z = tmp_z;
+}
+
+void rotate_y(t_fdf **fdf)
+{
+	int	tmp_x;
+	int	tmp_y;
+	int	tmp_z;
+
+	tmp_x = ((*fdf)->a).x * cos((*fdf)->angle_y) + ((*fdf)->a).z * sin((*fdf)->angle_y);
+	tmp_y = ((*fdf)->a).y;
+	tmp_z = -((*fdf)->a).x * sin((*fdf)->angle_y) + ((*fdf)->a).z * cos((*fdf)->angle_y);
+	((*fdf)->a).x = tmp_x;
+	((*fdf)->a).y = tmp_y;
+	((*fdf)->a).z = tmp_z;
+	tmp_x = ((*fdf)->b).x * cos((*fdf)->angle_y) + ((*fdf)->b).z * sin((*fdf)->angle_y);
+	tmp_y = ((*fdf)->b).y;
+	tmp_z = -((*fdf)->b).x * sin((*fdf)->angle_y) + ((*fdf)->b).z * cos((*fdf)->angle_y);
+	((*fdf)->b).x = tmp_x;
+	((*fdf)->b).y = tmp_y;
+	((*fdf)->b).z = tmp_z;
+}
+
+void rotate_z(t_fdf **fdf)
+{
+	int	tmp_x;
+	int	tmp_y;
+	int	tmp_z;
+
+	tmp_x = ((*fdf)->a).x * cos((*fdf)->angle_z) - ((*fdf)->a).y * sin((*fdf)->angle_z);
+	tmp_y = ((*fdf)->a).x * sin((*fdf)->angle_z) + ((*fdf)->a).y * cos((*fdf)->angle_z);
+	tmp_z = ((*fdf)->a).z;
+	((*fdf)->a).x = tmp_x;
+	((*fdf)->a).y = tmp_y;
+	((*fdf)->a).z = tmp_z;
+	tmp_x = ((*fdf)->b).x * cos((*fdf)->angle_z) - ((*fdf)->b).y * sin((*fdf)->angle_z);
+	tmp_y = ((*fdf)->b).x * sin((*fdf)->angle_z) + ((*fdf)->b).y * cos((*fdf)->angle_z);
+	tmp_z = ((*fdf)->b).z;
+	((*fdf)->b).x = tmp_x;
+	((*fdf)->b).y = tmp_y;
+	((*fdf)->b).z = tmp_z;
+}
+
 void plotLine(t_fdf **fdf)
 {
 	int diff_y;
 	int diff_x;
 
 	zoom(fdf);
+	rotate_x(fdf);
+	rotate_y(fdf);
+	rotate_z(fdf);
 	isometric(fdf);
 	move(fdf);
 	diff_y = ((*fdf)->b).y - ((*fdf)->a).y;
@@ -171,7 +230,6 @@ int	draw(t_fdf *fdf)
 
 	fdf->img.mlx_img = mlx_new_image(fdf->mlx, WIDTH, HEIGHT);
 	fdf->img.addr = mlx_get_data_addr(fdf->img.mlx_img, &(fdf->img.bpp), &(fdf->img.line_len), &(fdf->img.endian));
-	// printf("&(fdf->img.bpp): %d &(fdf->img.line_len): %d\n", (fdf->img.bpp), (fdf->img.line_len));
 	mlx_clear_window(fdf->mlx, fdf->win);
 	i = -1;
 	while (++i < fdf->height)
@@ -213,6 +271,22 @@ int	handle_keys(int key, t_fdf **fdf)
 		(*fdf)->scale += 1;
 	if (key == MINUS_KEY && (*fdf)->scale > 5)
 		(*fdf)->scale -= 1;
+	if (key == LEFT_BRACKET_KEY)
+		(*fdf)->scale_z -= 1;
+	if (key == RIGHT_BRACKET_KEY)
+		(*fdf)->scale_z += 1;
+	if (key == A_KEY)
+		(*fdf)->angle_x -= 0.1;
+	if (key == D_KEY)
+		(*fdf)->angle_x += 0.1;
+	if (key == W_KEY)
+		(*fdf)->angle_y -= 0.1;
+	if (key == S_KEY)
+		(*fdf)->angle_y += 0.1;
+	if (key == Q_KEY)
+		(*fdf)->angle_z -= 0.1;
+	if (key == E_KEY)
+		(*fdf)->angle_z += 0.1;
 	if (key == ESC_KEY)
 	{
 		mlx_destroy_window((*fdf)->mlx, (*fdf)->win);
@@ -311,6 +385,10 @@ int	main(int ac, char **av)
 		node = node->next;
 	}
 	fdf->scale = 20;
+	fdf->scale_z = 1;
+	fdf->angle_x = 0;
+	fdf->angle_y = 0;
+	fdf->angle_z = 0;
 	fdf->move_x = WIDTH / 2;
 	fdf->move_y = 2 * HEIGHT / 5;
 	draw(fdf);
