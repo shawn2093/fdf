@@ -20,6 +20,11 @@
 # define S_KEY 1
 # define Q_KEY 12
 # define E_KEY 14
+# define I_KEY 34
+# define C_KEY 8
+# define O_KEY 31
+# define Z_KEY 6
+# define X_KEY 7
 
 typedef struct s_img
 {
@@ -60,9 +65,11 @@ typedef struct s_fdf
     int     move_y;
     int     scale;
     int     scale_z;
+    double  angle;
     double  angle_x;
     double  angle_y;
     double  angle_z;
+    int     projection;
     t_point a;
     t_point b;
     t_img   img;

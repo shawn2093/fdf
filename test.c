@@ -118,10 +118,26 @@ void zoom(t_fdf **fdf)
 }
 void isometric(t_fdf **fdf)
 {
-	((*fdf)->a).x = (((*fdf)->a).x - ((*fdf)->a).y) * cos(0.8);
-	((*fdf)->a).y = (((*fdf)->a).x + ((*fdf)->a).y) * sin(0.8) - ((*fdf)->a).z;
-	((*fdf)->b).x = (((*fdf)->b).x - ((*fdf)->b).y) * cos(0.8);
-	((*fdf)->b).y = (((*fdf)->b).x + ((*fdf)->b).y) * sin(0.8) - ((*fdf)->b).z;
+	((*fdf)->a).x = (((*fdf)->a).x - ((*fdf)->a).y) * cos((*fdf)->angle);
+	((*fdf)->a).y = (((*fdf)->a).x + ((*fdf)->a).y) * sin((*fdf)->angle) - ((*fdf)->a).z;
+	((*fdf)->b).x = (((*fdf)->b).x - ((*fdf)->b).y) * cos((*fdf)->angle);
+	((*fdf)->b).y = (((*fdf)->b).x + ((*fdf)->b).y) * sin((*fdf)->angle) - ((*fdf)->b).z;
+}
+
+void cabinet(t_fdf **fdf)
+{
+	((*fdf)->a).x = ((*fdf)->a).x + ((*fdf)->a).z * cos((*fdf)->angle) * 0.5;
+	((*fdf)->a).y = ((*fdf)->a).y + ((*fdf)->a).z * sin((*fdf)->angle) * 0.5;
+	((*fdf)->b).x = ((*fdf)->b).x + ((*fdf)->b).z * cos((*fdf)->angle) * 0.5;
+	((*fdf)->b).y = ((*fdf)->b).y + ((*fdf)->b).z * sin((*fdf)->angle) * 0.5;
+}
+
+void oblique(t_fdf **fdf)
+{
+	((*fdf)->a).x = ((*fdf)->a).x - ((*fdf)->a).z * cos((*fdf)->angle);
+	((*fdf)->a).y = ((*fdf)->a).y - ((*fdf)->a).z * sin((*fdf)->angle);
+	((*fdf)->b).x = ((*fdf)->b).x - ((*fdf)->b).z * cos((*fdf)->angle);
+	((*fdf)->b).y = ((*fdf)->b).y - ((*fdf)->b).z * sin((*fdf)->angle);
 }
 
 void move(t_fdf **fdf)
@@ -201,7 +217,13 @@ void plotLine(t_fdf **fdf)
 	rotate_x(fdf);
 	rotate_y(fdf);
 	rotate_z(fdf);
-	isometric(fdf);
+	// printf("(*fdf)->projection: %c", (*fdf)->projection);
+	if ((*fdf)->projection == 'i')
+		isometric(fdf);
+	else if ((*fdf)->projection == 'c')
+		cabinet(fdf);
+	else if ((*fdf)->projection == 'o')
+		oblique(fdf);
 	move(fdf);
 	diff_y = ((*fdf)->b).y - ((*fdf)->a).y;
 	diff_x = ((*fdf)->b).x - ((*fdf)->a).x;
@@ -221,6 +243,24 @@ void plotLine(t_fdf **fdf)
 		else
 			plotLineHigh(fdf, ((*fdf)->a), ((*fdf)->b));
 	}
+}
+
+void	print_string(int y, char *str, int input, t_fdf *fdf)
+{
+	char *full_str;
+	char *input_str;
+
+	input_str = ft_itoa(input);
+	full_str = ft_strjoin(str, input_str);
+	mlx_string_input(fdf->mlx, fdf->win, 5, y, 0x00ff00, full_str);
+	free(input_str);
+	free(full_str);
+}
+
+void	menu(t_fdf *fdf)
+{
+	mlx_string_put(fdf->mlx, fdf->win, 5, 5, 0x00ff00, "hihinono");
+	mlx_string_put(fdf->mlx, fdf->win, 5, 15, 0x00ff00, "nono");
 }
 
 int	draw(t_fdf *fdf)
@@ -253,6 +293,7 @@ int	draw(t_fdf *fdf)
 	}
 	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img.mlx_img, 0, 0);
 	mlx_destroy_image(fdf->mlx, fdf->img.mlx_img);
+	menu(fdf);
 	return (0);
 }
 
@@ -287,6 +328,16 @@ int	handle_keys(int key, t_fdf **fdf)
 		(*fdf)->angle_z -= 0.1;
 	if (key == E_KEY)
 		(*fdf)->angle_z += 0.1;
+	if (key == Z_KEY)
+		(*fdf)->angle -= 0.1;
+	if (key == X_KEY)
+		(*fdf)->angle += 0.1;
+	if (key == I_KEY)
+		(*fdf)->projection = 'i';
+	if (key == C_KEY)
+		(*fdf)->projection = 'c';
+	if (key == O_KEY)
+		(*fdf)->projection = 'o';
 	if (key == ESC_KEY)
 	{
 		mlx_destroy_window((*fdf)->mlx, (*fdf)->win);
@@ -384,6 +435,8 @@ int	main(int ac, char **av)
 		free(splitstr);
 		node = node->next;
 	}
+	fdf->projection = 'i';
+	fdf->angle = 0.6;
 	fdf->scale = 20;
 	fdf->scale_z = 1;
 	fdf->angle_x = 0;
