@@ -63,8 +63,9 @@ void plotLineLow(t_fdf **fdf, t_point first, t_point second)
 	a.D = (2 * a.dy) - a.dx;
 	a.y = first.y;
 	a.x = first.x - 1;
-	if (second.z)
-		first.color = second.color;
+	// first.color = (*fdf)->palette[0];
+	// if (first.z)
+	// 	first.color = (*fdf)->palette[1];
 	while (++a.x <= second.x)
 	{
 		img_pix_put(&((*fdf)->img), a.x, a.y, (unsigned int) first.color);
@@ -92,8 +93,9 @@ void plotLineHigh(t_fdf **fdf, t_point first, t_point second)
 	a.D = (2 * a.dx) - a.dy;
 	a.y = first.y - 1;
 	a.x = first.x;
-	if (second.z)
-		first.color = second.color;
+	// first.color = (*fdf)->palette[0];
+	// if (first.z)
+	// 	first.color = (*fdf)->palette[1];
 	while (++a.y <= second.y)
 	{
 		img_pix_put(&((*fdf)->img), a.x, a.y, (unsigned int) first.color);
@@ -166,6 +168,8 @@ void rotate_x(t_fdf **fdf)
 	((*fdf)->b).x = tmp_x;
 	((*fdf)->b).y = tmp_y;
 	((*fdf)->b).z = tmp_z;
+	// ((*fdf)->a).y = ((*fdf)->a).y * cos((*fdf)->angle_x) - ((*fdf)->a).z * sin((*fdf)->angle_x);
+	// ((*fdf)->b).y = ((*fdf)->b).y * cos((*fdf)->angle_x) - ((*fdf)->b).z * sin((*fdf)->angle_x);
 }
 
 void rotate_y(t_fdf **fdf)
@@ -208,6 +212,21 @@ void rotate_z(t_fdf **fdf)
 	((*fdf)->b).z = tmp_z;
 }
 
+void init_fdf(t_fdf **fdf)
+{
+	(*fdf)->projection = 'i';
+	(*fdf)->palette[0] = 0xffffff;
+	(*fdf)->palette[1] = 0xff0000;
+	(*fdf)->angle = 0.6;
+	(*fdf)->scale = 20;
+	(*fdf)->scale_z = 1;
+	(*fdf)->angle_x = 0;
+	(*fdf)->angle_y = 0;
+	(*fdf)->angle_z = 0;
+	(*fdf)->move_x = WIDTH / 2;
+	(*fdf)->move_y = 2 * HEIGHT / 5;
+}
+
 void plotLine(t_fdf **fdf)
 {
 	int diff_y;
@@ -217,7 +236,6 @@ void plotLine(t_fdf **fdf)
 	rotate_x(fdf);
 	rotate_y(fdf);
 	rotate_z(fdf);
-	// printf("(*fdf)->projection: %c", (*fdf)->projection);
 	if ((*fdf)->projection == 'i')
 		isometric(fdf);
 	else if ((*fdf)->projection == 'c')
@@ -245,22 +263,86 @@ void plotLine(t_fdf **fdf)
 	}
 }
 
-void	print_string(int y, char *str, int input, t_fdf *fdf)
+void	print_string(int y, char *str, t_fdf *fdf, int input)
 {
 	char *full_str;
 	char *input_str;
 
-	input_str = ft_itoa(input);
+	if (input == 'i')
+		input_str = ft_strdup("i");
+	else if (input == 'c')
+		input_str = ft_strdup("c");
+	else if (input == 'o')
+		input_str = ft_strdup("o");
+	else
+		input_str = ft_itoa(input);
 	full_str = ft_strjoin(str, input_str);
-	mlx_string_input(fdf->mlx, fdf->win, 5, y, 0x00ff00, full_str);
+	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (y * 15), 0x00ff00, full_str);
 	free(input_str);
 	free(full_str);
 }
 
 void	menu(t_fdf *fdf)
 {
-	mlx_string_put(fdf->mlx, fdf->win, 5, 5, 0x00ff00, "hihinono");
-	mlx_string_put(fdf->mlx, fdf->win, 5, 15, 0x00ff00, "nono");
+	int	i;
+
+	i = -1;
+	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "Arrow key to move");
+	print_string(++i, "Position X: ", fdf, fdf->move_x);
+	print_string(++i, "Position Y: ", fdf, fdf->move_y);
+	print_string(++i, "A/D to rotate x: ", fdf, (int)(fdf->angle_x * 10));
+	print_string(++i, "W/S to rotate y: ", fdf, (int)(fdf->angle_y * 10));
+	print_string(++i, "Q/E to rotate z: ", fdf, (int)(fdf->angle_z * 10));
+	print_string(++i, "+/- to scale up/down: ", fdf, fdf->scale - 20);
+	print_string(++i, "[/] to scale alt: ", fdf, fdf->scale_z);
+	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "I: isometric projection");
+	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "C: cabinet projection");
+	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "O: oblique projection");
+	print_string(++i, "Current projection: ", fdf, fdf->projection);
+	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "4 Key to Reset");
+	print_string(++i, "Transparency of flat: ", fdf, (fdf->palette[0] >> 24) & 0xFF);
+	print_string(++i, "R-color of flat: ", fdf, (fdf->palette[0] >> 16) & 0xFF);
+	print_string(++i, "G-color of flat: ", fdf, (fdf->palette[0] >> 8) & 0xFF);
+	print_string(++i, "B-color of flat: ", fdf, fdf->palette[0] & 0xFF);
+	print_string(++i, "Transparency of alt: ", fdf, (fdf->palette[1] >> 24) & 0xFF);
+	print_string(++i, "R-color of alt: ", fdf, (fdf->palette[1] >> 16) & 0xFF);
+	print_string(++i, "G-color of alt: ", fdf, (fdf->palette[1] >> 8) & 0xFF);
+	print_string(++i, "B-color of alt: ", fdf, fdf->palette[1] & 0xFF);
+	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "ESC Key to Exit");
+}
+
+void update_color(int trgb, char c, t_fdf **fdf)
+{
+	int	t;
+	int	r;
+	int	g;
+	int	b;
+	int	i;
+	int	j;
+
+	t = (trgb >> 24) & 0xFF;
+	r = (trgb >> 16) & 0xFF;
+	g = (trgb >> 8) & 0xFF;
+	b = trgb & 0xFF;
+	if (c == 't')
+		t++;
+	else if (c == 'r')
+		r++;
+	else if (c == 'g')
+		g++;
+	else if (c == 'b')
+		b++;
+	(*fdf)->palette[0] = (t << 24 | r << 16 | g << 8 | b);
+	i = -1;
+	while (++i < (*fdf)->height)
+	{
+		j = -1;
+		while (++j < (*fdf)->width)
+		{
+			if ((*fdf)->matrix[i][j].color == trgb)
+				(*fdf)->matrix[i][j].color = (*fdf)->palette[0];
+		}
+	}
 }
 
 int	draw(t_fdf *fdf)
@@ -297,6 +379,7 @@ int	draw(t_fdf *fdf)
 	return (0);
 }
 
+
 int	handle_keys(int key, t_fdf **fdf)
 {
 	printf("%d\n", key);
@@ -310,7 +393,7 @@ int	handle_keys(int key, t_fdf **fdf)
 		(*fdf)->move_y += 10;
 	if (key == PLUS_KEY)
 		(*fdf)->scale += 1;
-	if (key == MINUS_KEY && (*fdf)->scale > 5)
+	if (key == MINUS_KEY && (*fdf)->scale > 0)
 		(*fdf)->scale -= 1;
 	if (key == LEFT_BRACKET_KEY)
 		(*fdf)->scale_z -= 1;
@@ -338,6 +421,16 @@ int	handle_keys(int key, t_fdf **fdf)
 		(*fdf)->projection = 'c';
 	if (key == O_KEY)
 		(*fdf)->projection = 'o';
+	if (key == R_KEY)
+		update_color((*fdf)->palette[0], 'r', fdf);
+	if (key == G_KEY)
+		update_color((*fdf)->palette[0], 'g', fdf);
+	if (key == B_KEY)
+		update_color((*fdf)->palette[0], 'b', fdf);
+	if (key == T_KEY)
+		update_color((*fdf)->palette[0], 't', fdf);
+	if (key == FOUR_KEY)
+		init_fdf(fdf);
 	if (key == ESC_KEY)
 	{
 		mlx_destroy_window((*fdf)->mlx, (*fdf)->win);
@@ -365,10 +458,7 @@ int	main(int ac, char **av)
 		exit(EXIT_FAILURE);
 	}
 	fdf->mlx = mlx_init();
-	fdf->win = mlx_new_window(fdf->mlx, 
-				WIDTH,
-				HEIGHT,
-				"Pollock");
+	fdf->win = mlx_new_window(fdf->mlx, WIDTH, HEIGHT, "FDF");
 	fd = open(av[1], O_RDONLY);
 	if (fd == -1)
 	{
@@ -405,6 +495,7 @@ int	main(int ac, char **av)
 		free(str);
 		str = get_next_line(fd);
 	}
+	// printf("where?");
 	fdf->height = ft_lstsize_gnl(input);
 	fdf->matrix = (t_point **) malloc(sizeof(t_point *) * fdf->height);
 	i = -1;
@@ -435,15 +526,8 @@ int	main(int ac, char **av)
 		free(splitstr);
 		node = node->next;
 	}
-	fdf->projection = 'i';
-	fdf->angle = 0.6;
-	fdf->scale = 20;
-	fdf->scale_z = 1;
-	fdf->angle_x = 0;
-	fdf->angle_y = 0;
-	fdf->angle_z = 0;
-	fdf->move_x = WIDTH / 2;
-	fdf->move_y = 2 * HEIGHT / 5;
+	init_fdf(&fdf);
+	// printf("mlx_get_color_value: %d", mlx_get_color_value(fdf->mlx, ))
 	draw(fdf);
 	mlx_key_hook(fdf->win, handle_keys, &fdf);
 	mlx_loop(fdf->mlx);
