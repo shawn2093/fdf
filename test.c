@@ -2,12 +2,11 @@
 #include "libft/includes/ft_printf.h"
 #include "libft/includes/libft.h"
 #include "libft/includes/get_next_line.h"
-#include <time.h>
 #include <math.h>
 #include "fdf.h"
 
-#define WIDTH 1000
-#define HEIGHT 700
+#define WIDTH 1920
+#define HEIGHT 1080
 
 int	ft_atoh(const char *str)
 {
@@ -63,12 +62,9 @@ void plotLineLow(t_fdf **fdf, t_point first, t_point second)
 	a.D = (2 * a.dy) - a.dx;
 	a.y = first.y;
 	a.x = first.x - 1;
-	// first.color = (*fdf)->palette[0];
-	// if (first.z)
-	// 	first.color = (*fdf)->palette[1];
 	while (++a.x <= second.x)
 	{
-		img_pix_put(&((*fdf)->img), a.x, a.y, (unsigned int) first.color);
+		img_pix_put(&((*fdf)->img), a.x, a.y, (unsigned int) (*fdf)->palette_update[first.color]);
 		if (a.D > 0)
 		{
 			a.y = a.y + a.yi;
@@ -93,12 +89,9 @@ void plotLineHigh(t_fdf **fdf, t_point first, t_point second)
 	a.D = (2 * a.dx) - a.dy;
 	a.y = first.y - 1;
 	a.x = first.x;
-	// first.color = (*fdf)->palette[0];
-	// if (first.z)
-	// 	first.color = (*fdf)->palette[1];
 	while (++a.y <= second.y)
 	{
-		img_pix_put(&((*fdf)->img), a.x, a.y, (unsigned int) first.color);
+		img_pix_put(&((*fdf)->img), a.x, a.y, (unsigned int) (*fdf)->palette_update[first.color]);
 		if (a.D > 0)
 		{
 			a.x = a.x + a.xi;
@@ -125,7 +118,7 @@ void isometric(t_fdf **fdf)
 	((*fdf)->b).x = (((*fdf)->b).x - ((*fdf)->b).y) * cos((*fdf)->angle);
 	((*fdf)->b).y = (((*fdf)->b).x + ((*fdf)->b).y) * sin((*fdf)->angle) - ((*fdf)->b).z;
 }
-
+// https://en.wikipedia.org/wiki/Oblique_projection#Cabinet_projection
 void cabinet(t_fdf **fdf)
 {
 	((*fdf)->a).x = ((*fdf)->a).x + ((*fdf)->a).z * cos((*fdf)->angle) * 0.5;
@@ -134,6 +127,7 @@ void cabinet(t_fdf **fdf)
 	((*fdf)->b).y = ((*fdf)->b).y + ((*fdf)->b).z * sin((*fdf)->angle) * 0.5;
 }
 
+// https://www.101computing.net/oblique-projection-formulas/
 void oblique(t_fdf **fdf)
 {
 	((*fdf)->a).x = ((*fdf)->a).x - ((*fdf)->a).z * cos((*fdf)->angle);
@@ -214,9 +208,14 @@ void rotate_z(t_fdf **fdf)
 
 void init_fdf(t_fdf **fdf)
 {
+	int i;
+
+	i = -1;
+	(*fdf)->palette_ori[0] = 0xffffff;
+	(*fdf)->palette_ori[1] = 0xff0000;
+	while (++i < (*fdf)->palette_type)
+		(*fdf)->palette_update[i] = (*fdf)->palette_ori[i];
 	(*fdf)->projection = 'i';
-	(*fdf)->palette[0] = 0xffffff;
-	(*fdf)->palette[1] = 0xff0000;
 	(*fdf)->angle = 0.6;
 	(*fdf)->scale = 20;
 	(*fdf)->scale_z = 1;
@@ -225,6 +224,13 @@ void init_fdf(t_fdf **fdf)
 	(*fdf)->angle_z = 0;
 	(*fdf)->move_x = WIDTH / 2;
 	(*fdf)->move_y = 2 * HEIGHT / 5;
+	if ((*fdf)->print_flat == 0)
+		(*fdf)->palette_idx = 0;
+	else if ((*fdf)->print_alt == 0)
+		(*fdf)->palette_idx = 1;
+	else
+		(*fdf)->palette_idx = 2;
+	(*fdf)->palette_sign = 1;
 }
 
 void plotLine(t_fdf **fdf)
@@ -285,29 +291,37 @@ void	print_string(int y, char *str, t_fdf *fdf, int input)
 void	menu(t_fdf *fdf)
 {
 	int	i;
+	int	j;
 
 	i = -1;
+	j = -1;
 	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "Arrow key to move");
 	print_string(++i, "Position X: ", fdf, fdf->move_x);
 	print_string(++i, "Position Y: ", fdf, fdf->move_y);
 	print_string(++i, "A/D to rotate x: ", fdf, (int)(fdf->angle_x * 10));
 	print_string(++i, "W/S to rotate y: ", fdf, (int)(fdf->angle_y * 10));
 	print_string(++i, "Q/E to rotate z: ", fdf, (int)(fdf->angle_z * 10));
+	print_string(++i, "Z/X to change angle: ", fdf, (int)(fdf->angle * 10));
 	print_string(++i, "+/- to scale up/down: ", fdf, fdf->scale - 20);
 	print_string(++i, "[/] to scale alt: ", fdf, fdf->scale_z);
 	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "I: isometric projection");
 	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "C: cabinet projection");
 	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "O: oblique projection");
 	print_string(++i, "Current projection: ", fdf, fdf->projection);
-	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "4 Key to Reset");
-	print_string(++i, "Transparency of flat: ", fdf, (fdf->palette[0] >> 24) & 0xFF);
-	print_string(++i, "R-color of flat: ", fdf, (fdf->palette[0] >> 16) & 0xFF);
-	print_string(++i, "G-color of flat: ", fdf, (fdf->palette[0] >> 8) & 0xFF);
-	print_string(++i, "B-color of flat: ", fdf, fdf->palette[0] & 0xFF);
-	print_string(++i, "Transparency of alt: ", fdf, (fdf->palette[1] >> 24) & 0xFF);
-	print_string(++i, "R-color of alt: ", fdf, (fdf->palette[1] >> 16) & 0xFF);
-	print_string(++i, "G-color of alt: ", fdf, (fdf->palette[1] >> 8) & 0xFF);
-	print_string(++i, "B-color of alt: ", fdf, fdf->palette[1] & 0xFF);
+	print_string(++i, "Target of Color (0-9): ", fdf, fdf->palette_idx + 1);
+	print_string(++i, "Change of Color (\\): ", fdf, fdf->palette_sign);
+	while (++j < fdf->palette_type)
+	{
+		if (!((j == 0 && fdf->print_flat == 1) || (j == 1 && fdf->print_alt == 1)))
+		{
+			print_string(++i, "Details of Color ", fdf, j + 1);
+			print_string(++i, "Transparency: ", fdf, (fdf->palette_update[j] >> 24) & 0xFF);
+			print_string(++i, "R-color: ", fdf, (fdf->palette_update[j] >> 16) & 0xFF);
+			print_string(++i, "G-color: ", fdf, (fdf->palette_update[j] >> 8) & 0xFF);
+			print_string(++i, "B-color: ", fdf, fdf->palette_update[j] & 0xFF);
+		}
+	}
+	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "SPACE Key to Reset");
 	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "ESC Key to Exit");
 }
 
@@ -317,32 +331,41 @@ void update_color(int trgb, char c, t_fdf **fdf)
 	int	r;
 	int	g;
 	int	b;
-	int	i;
-	int	j;
+	int	tmp_t;
 
 	t = (trgb >> 24) & 0xFF;
 	r = (trgb >> 16) & 0xFF;
 	g = (trgb >> 8) & 0xFF;
 	b = trgb & 0xFF;
+	tmp_t = t;
 	if (c == 't')
-		t++;
+		t = t + (*fdf)->palette_sign;
 	else if (c == 'r')
-		r++;
-	else if (c == 'g')
-		g++;
-	else if (c == 'b')
-		b++;
-	(*fdf)->palette[0] = (t << 24 | r << 16 | g << 8 | b);
-	i = -1;
-	while (++i < (*fdf)->height)
 	{
-		j = -1;
-		while (++j < (*fdf)->width)
-		{
-			if ((*fdf)->matrix[i][j].color == trgb)
-				(*fdf)->matrix[i][j].color = (*fdf)->palette[0];
-		}
+		r = r + (*fdf)->palette_sign;
+		t = tmp_t;
 	}
+	else if (c == 'g')
+	{
+		g = g + (*fdf)->palette_sign;
+		t = tmp_t;
+	}
+	else if (c == 'b')
+	{
+		b = b + (*fdf)->palette_sign;
+		t = tmp_t;
+	}
+	(*fdf)->palette_update[(*fdf)->palette_idx] = (t << 24 | r << 16 | g << 8 | b);
+}
+
+void invert_color(int trgb, t_fdf **fdf)
+{
+	int neg;
+	// int	t;
+	// int	tmp_t;
+	
+	neg = (0xFFFFFF - trgb) | 0x00000000;
+	(*fdf)->palette_update[(*fdf)->palette_idx] = neg;
 }
 
 int	draw(t_fdf *fdf)
@@ -422,14 +445,38 @@ int	handle_keys(int key, t_fdf **fdf)
 	if (key == O_KEY)
 		(*fdf)->projection = 'o';
 	if (key == R_KEY)
-		update_color((*fdf)->palette[0], 'r', fdf);
+		update_color((*fdf)->palette_update[(*fdf)->palette_idx], 'r', fdf);
 	if (key == G_KEY)
-		update_color((*fdf)->palette[0], 'g', fdf);
+		update_color((*fdf)->palette_update[(*fdf)->palette_idx], 'g', fdf);
 	if (key == B_KEY)
-		update_color((*fdf)->palette[0], 'b', fdf);
+		update_color((*fdf)->palette_update[(*fdf)->palette_idx], 'b', fdf);
 	if (key == T_KEY)
-		update_color((*fdf)->palette[0], 't', fdf);
-	if (key == FOUR_KEY)
+		update_color((*fdf)->palette_update[(*fdf)->palette_idx], 't', fdf);
+	if (key == ENTER_KEY)
+		invert_color((*fdf)->palette_update[(*fdf)->palette_idx], fdf);
+	if (key == ONE_KEY && (*fdf)->palette_type >= 1 && (*fdf)->print_flat == 0)
+		(*fdf)->palette_idx = 0;
+	if (key == TWO_KEY && (*fdf)->palette_type >= 2 && (*fdf)->print_alt == 0)
+		(*fdf)->palette_idx = 1;
+	if (key == THREE_KEY && (*fdf)->palette_type >= 3)
+		(*fdf)->palette_idx = 2;
+	if (key == FOUR_KEY && (*fdf)->palette_type >= 4)
+		(*fdf)->palette_idx = 3;
+	if (key == FIVE_KEY && (*fdf)->palette_type >= 5)
+		(*fdf)->palette_idx = 4;
+	if (key == SIX_KEY && (*fdf)->palette_type >= 6)
+		(*fdf)->palette_idx = 5;
+	if (key == SEVEN_KEY && (*fdf)->palette_type >= 7)
+		(*fdf)->palette_idx = 6;
+	if (key == EIGHT_KEY && (*fdf)->palette_type >= 8)
+		(*fdf)->palette_idx = 7;
+	if (key == NINE_KEY && (*fdf)->palette_type >= 9)
+		(*fdf)->palette_idx = 8;
+	if (key == ZERO_KEY && (*fdf)->palette_type >= 10)
+		(*fdf)->palette_idx = 9;
+	if (key == BACKSLASH_KEY)
+		(*fdf)->palette_sign *= -1;
+	if (key == SPACE_KEY)
 		init_fdf(fdf);
 	if (key == ESC_KEY)
 	{
@@ -439,6 +486,26 @@ int	handle_keys(int key, t_fdf **fdf)
 	mlx_clear_window((*fdf)->mlx, (*fdf)->win);
 	draw(*fdf);
 	return (0);
+}
+
+int	check_color(t_fdf **fdf, int *idx, int trgb)
+{
+	int	i;
+
+	i = 1;
+	if (*idx == 2)
+		(*fdf)->palette_ori[*idx] = trgb;
+	else
+	{
+		while (++i < *idx)
+		{
+			if ((*fdf)->palette_ori[i] == trgb)
+				return (i);
+		}
+		(*fdf)->palette_ori[*idx] = trgb;
+	}
+	(*fdf)->palette_type = *idx + 1;
+	return((*idx)++);
 }
 
 int	main(int ac, char **av)
@@ -495,11 +562,14 @@ int	main(int ac, char **av)
 		free(str);
 		str = get_next_line(fd);
 	}
-	// printf("where?");
 	fdf->height = ft_lstsize_gnl(input);
 	fdf->matrix = (t_point **) malloc(sizeof(t_point *) * fdf->height);
 	i = -1;
+	fdf->print_flat = 1;
+	fdf->print_alt = 1;
 	int j;
+	int	idx = 2;
+	fdf->palette_type = 2;
 	node = input;
 	while (++i < fdf->height)
 	{
@@ -513,13 +583,19 @@ int	main(int ac, char **av)
 			fdf->matrix[i][j].z = ft_atoi(splitstr[j]);
 			char	*color = ft_strchr(splitstr[j], ',');
 			if (color)
-				fdf->matrix[i][j].color = ft_atoh(&color[3]);
+				fdf->matrix[i][j].color = check_color(&fdf, &idx, ft_atoh(&color[3]));
 			else
 			{
 				if (fdf->matrix[i][j].z == 0)
-					fdf->matrix[i][j].color = 0xffffff;
+				{
+					fdf->print_flat = 0;
+					fdf->matrix[i][j].color = 0;
+				}
 				else
-					fdf->matrix[i][j].color = 0xff0000;
+				{
+					fdf->print_alt = 0;
+					fdf->matrix[i][j].color = 1;
+				}
 			}
 			free(splitstr[j]);
 		}
@@ -527,7 +603,6 @@ int	main(int ac, char **av)
 		node = node->next;
 	}
 	init_fdf(&fdf);
-	// printf("mlx_get_color_value: %d", mlx_get_color_value(fdf->mlx, ))
 	draw(fdf);
 	mlx_key_hook(fdf->win, handle_keys, &fdf);
 	mlx_loop(fdf->mlx);

@@ -1,10 +1,7 @@
 #ifndef FDF_H
 # define FDF_H
 
-# define MAX(x, y) (x >= y) ? x : y
-# define MIN(x, y) (x <= y) ? x : y
 # define ABS(x) (x < 0) ? -x : x
-
 # define RIGHT_KEY 124
 # define LEFT_KEY 123
 # define UP_KEY 126
@@ -25,11 +22,23 @@
 # define O_KEY 31
 # define Z_KEY 6
 # define X_KEY 7
-# define FOUR_KEY 21
 # define R_KEY 15
 # define G_KEY 5
 # define B_KEY 11
 # define T_KEY 17
+# define SPACE_KEY 49
+# define ONE_KEY 18
+# define TWO_KEY 19
+# define THREE_KEY 20
+# define FOUR_KEY 21
+# define FIVE_KEY 23
+# define SIX_KEY 22
+# define SEVEN_KEY 26
+# define EIGHT_KEY 28
+# define NINE_KEY 25
+# define ZERO_KEY 29
+# define BACKSLASH_KEY 42
+# define ENTER_KEY 36
 
 typedef struct s_img
 {
@@ -75,7 +84,13 @@ typedef struct s_fdf
     double  angle_y;
     double  angle_z;
     int     projection;
-    int     palette[2];
+    int     palette_idx;
+    int     palette_type;
+    int     palette_sign;
+    int     palette_ori[10];
+    int     palette_update[10];
+    int     print_flat;
+    int     print_alt;
     t_point a;
     t_point b;
     t_img   img;
