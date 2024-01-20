@@ -362,8 +362,6 @@ void update_color(int trgb, char c, t_fdf **fdf)
 void invert_color(int trgb, t_fdf **fdf)
 {
 	int neg;
-	// int	t;
-	// int	tmp_t;
 	
 	neg = (0xFFFFFF - trgb) | 0x00000000;
 	(*fdf)->palette_update[(*fdf)->palette_idx] = neg;
@@ -402,7 +400,6 @@ int	draw(t_fdf *fdf)
 	menu(fdf);
 	return (0);
 }
-
 
 int	handle_keys(int key, t_fdf **fdf)
 {
