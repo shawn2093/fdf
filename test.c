@@ -234,6 +234,24 @@ void init_fdf(t_fdf **fdf)
 	(*fdf)->palette_sign = 1;
 }
 
+void plotLineChoice(t_fdf **fdf, int diff_x, int diff_y)
+{
+	if (diff_y < diff_x)
+	{
+		if (((*fdf)->a).x > ((*fdf)->b).x)
+			plotLineLow(fdf, ((*fdf)->b), (*fdf)->a);
+		else
+			plotLineLow(fdf, ((*fdf)->a), ((*fdf)->b));
+	}
+	else
+	{
+		if (((*fdf)->a).y > ((*fdf)->b).y)
+			plotLineHigh(fdf, ((*fdf)->b), ((*fdf)->a));
+		else
+			plotLineHigh(fdf, ((*fdf)->a), ((*fdf)->b));
+	}
+}
+
 void plotLine(t_fdf **fdf)
 {
 	int diff_y;
@@ -254,20 +272,7 @@ void plotLine(t_fdf **fdf)
 	diff_x = ((*fdf)->b).x - ((*fdf)->a).x;
 	diff_y = ABS(diff_y);
 	diff_x = ABS(diff_x);
-	if (diff_y < diff_x)
-	{
-		if (((*fdf)->a).x > ((*fdf)->b).x)
-			plotLineLow(fdf, ((*fdf)->b), (*fdf)->a);
-		else
-			plotLineLow(fdf, ((*fdf)->a), ((*fdf)->b));
-	}
-	else
-	{
-		if (((*fdf)->a).y > ((*fdf)->b).y)
-			plotLineHigh(fdf, ((*fdf)->b), ((*fdf)->a));
-		else
-			plotLineHigh(fdf, ((*fdf)->a), ((*fdf)->b));
-	}
+	plotLineChoice(fdf, diff_x, diff_y);
 }
 
 void	print_string(int y, char *str, t_fdf *fdf, int input)
@@ -287,6 +292,26 @@ void	print_string(int y, char *str, t_fdf *fdf, int input)
 	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (y * 15), 0x00ff00, full_str);
 	free(input_str);
 	free(full_str);
+}
+
+void print_color(t_fdf *fdf, int *i)
+{
+	int j;
+
+	j = -1;
+	print_string(++i, "Target of Color (0-9): ", fdf, fdf->palette_idx + 1);
+	print_string(++i, "Change of Color (\\): ", fdf, fdf->palette_sign);
+	while (++j < fdf->palette_type)
+	{
+		if (!((j == 0 && fdf->print_flat == 1) || (j == 1 && fdf->print_alt == 1)))
+		{
+			print_string(++(*i), "Details of Color ", fdf, j + 1);
+			print_string(++(*i), "Transparency: ", fdf, (fdf->palette_update[j] >> 24) & 0xFF);
+			print_string(++(*i), "R-color: ", fdf, (fdf->palette_update[j] >> 16) & 0xFF);
+			print_string(++(*i), "G-color: ", fdf, (fdf->palette_update[j] >> 8) & 0xFF);
+			print_string(++(*i), "B-color: ", fdf, fdf->palette_update[j] & 0xFF);
+		}
+	}
 }
 
 void	menu(t_fdf *fdf)
@@ -309,22 +334,56 @@ void	menu(t_fdf *fdf)
 	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "C: cabinet projection");
 	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "O: oblique projection");
 	print_string(++i, "Current projection: ", fdf, fdf->projection);
-	print_string(++i, "Target of Color (0-9): ", fdf, fdf->palette_idx + 1);
-	print_string(++i, "Change of Color (\\): ", fdf, fdf->palette_sign);
-	while (++j < fdf->palette_type)
-	{
-		if (!((j == 0 && fdf->print_flat == 1) || (j == 1 && fdf->print_alt == 1)))
-		{
-			print_string(++i, "Details of Color ", fdf, j + 1);
-			print_string(++i, "Transparency: ", fdf, (fdf->palette_update[j] >> 24) & 0xFF);
-			print_string(++i, "R-color: ", fdf, (fdf->palette_update[j] >> 16) & 0xFF);
-			print_string(++i, "G-color: ", fdf, (fdf->palette_update[j] >> 8) & 0xFF);
-			print_string(++i, "B-color: ", fdf, fdf->palette_update[j] & 0xFF);
-		}
-	}
+	print_color(fdf, &i);
+	// print_string(++i, "Target of Color (0-9): ", fdf, fdf->palette_idx + 1);
+	// print_string(++i, "Change of Color (\\): ", fdf, fdf->palette_sign);
+	// while (++j < fdf->palette_type)
+	// {
+	// 	if (!((j == 0 && fdf->print_flat == 1) || (j == 1 && fdf->print_alt == 1)))
+	// 	{
+	// 		print_string(++i, "Details of Color ", fdf, j + 1);
+	// 		print_string(++i, "Transparency: ", fdf, (fdf->palette_update[j] >> 24) & 0xFF);
+	// 		print_string(++i, "R-color: ", fdf, (fdf->palette_update[j] >> 16) & 0xFF);
+	// 		print_string(++i, "G-color: ", fdf, (fdf->palette_update[j] >> 8) & 0xFF);
+	// 		print_string(++i, "B-color: ", fdf, fdf->palette_update[j] & 0xFF);
+	// 	}
+	// }
 	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "SPACE Key to Reset");
 	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "ESC Key to Exit");
 }
+
+// void update_color(int trgb, char c, t_fdf **fdf)
+// {
+// 	int	t;
+// 	int	r;
+// 	int	g;
+// 	int	b;
+// 	int	tmp_t;
+
+// 	t = (trgb >> 24) & 0xFF;
+// 	r = (trgb >> 16) & 0xFF;
+// 	g = (trgb >> 8) & 0xFF;
+// 	b = trgb & 0xFF;
+// 	tmp_t = t;
+// 	if (c == 't')
+// 		t = t + (*fdf)->palette_sign;
+// 	else if (c == 'r')
+// 	{
+// 		r = r + (*fdf)->palette_sign;
+// 		t = tmp_t;
+// 	}
+// 	else if (c == 'g')
+// 	{
+// 		g = g + (*fdf)->palette_sign;
+// 		t = tmp_t;
+// 	}
+// 	else if (c == 'b')
+// 	{
+// 		b = b + (*fdf)->palette_sign;
+// 		t = tmp_t;
+// 	}
+// 	(*fdf)->palette_update[(*fdf)->palette_idx] = (t << 24 | r << 16 | g << 8 | b);
+// }
 
 void update_color(int trgb, char c, t_fdf **fdf)
 {
@@ -334,28 +393,19 @@ void update_color(int trgb, char c, t_fdf **fdf)
 	int	b;
 	int	tmp_t;
 
-	t = (trgb >> 24) & 0xFF;
+	tmp_t = (trgb >> 24) & 0xFF;
 	r = (trgb >> 16) & 0xFF;
 	g = (trgb >> 8) & 0xFF;
 	b = trgb & 0xFF;
-	tmp_t = t;
+	t = tmp_t;
 	if (c == 't')
-		t = t + (*fdf)->palette_sign;
+		t += (*fdf)->palette_sign;
 	else if (c == 'r')
-	{
 		r = r + (*fdf)->palette_sign;
-		t = tmp_t;
-	}
 	else if (c == 'g')
-	{
 		g = g + (*fdf)->palette_sign;
-		t = tmp_t;
-	}
 	else if (c == 'b')
-	{
 		b = b + (*fdf)->palette_sign;
-		t = tmp_t;
-	}
 	(*fdf)->palette_update[(*fdf)->palette_idx] = (t << 24 | r << 16 | g << 8 | b);
 }
 
