@@ -299,8 +299,8 @@ void print_color(t_fdf *fdf, int *i)
 	int j;
 
 	j = -1;
-	print_string(++i, "Target of Color (0-9): ", fdf, fdf->palette_idx + 1);
-	print_string(++i, "Change of Color (\\): ", fdf, fdf->palette_sign);
+	print_string(++(*i), "Target of Color (0-9): ", fdf, fdf->palette_idx + 1);
+	print_string(++(*i), "Change of Color (\\): ", fdf, fdf->palette_sign);
 	while (++j < fdf->palette_type)
 	{
 		if (!((j == 0 && fdf->print_flat == 1) || (j == 1 && fdf->print_alt == 1)))
