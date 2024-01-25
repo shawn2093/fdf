@@ -6,7 +6,7 @@
 /*   By: long <long@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 01:59:11 by long              #+#    #+#             */
-/*   Updated: 2024/01/26 02:12:44 by long             ###   ########.fr       */
+/*   Updated: 2024/01/26 02:23:54 by long             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ void	img_pix_put(t_img *img, int x, int y, unsigned int color)
 	char	*pixel;
 
 	if (x > 0 && y > 0 && x < WIDTH && y < HEIGHT)
-    {
-        pixel = img->addr + (y * img->line_len + x * (img->bpp / 8));
-        *(unsigned int *)pixel = color;
-    }
+	{
+		pixel = img->addr + (y * img->line_len + x * (img->bpp / 8));
+		*(unsigned int *)pixel = color;
+	}
 }
 
 // first.x < second.x
@@ -33,7 +33,7 @@ void	plotlinelow(t_fdf **fdf, t_point first, t_point second)
 	a.yi = 1;
 	if (a.dy < 0)
 		a.yi = -1;
-	a.dy = ABS(a.dy);
+	a.dy *= a.yi;
 	a.d = (2 * a.dy) - a.dx;
 	a.y = first.y;
 	a.x = first.x - 1;
@@ -61,7 +61,7 @@ void	plotlinehigh(t_fdf **fdf, t_point first, t_point second)
 	a.xi = 1;
 	if (a.dx < 0)
 		a.xi = -1;
-	a.dx = ABS(a.dx);
+	a.dx *= a.xi;
 	a.d = (2 * a.dx) - a.dy;
 	a.y = first.y - 1;
 	a.x = first.x;
@@ -109,13 +109,15 @@ void	plotline(t_fdf **fdf)
 	if ((*fdf)->projection == 'i')
 		isometric(fdf);
 	else if ((*fdf)->projection == 'c')
-        cabinet(fdf);
-    else if ((*fdf)->projection == 'o')
+		cabinet(fdf);
+	else if ((*fdf)->projection == 'o')
 		oblique(fdf);
 	move(fdf);
 	diff_y = ((*fdf)->b).y - ((*fdf)->a).y;
 	diff_x = ((*fdf)->b).x - ((*fdf)->a).x;
-	diff_y = ABS(diff_y);
-	diff_x = ABS(diff_x);
+	if (diff_y < 0)
+		diff_y = -diff_y;
+	if (diff_x < 0)
+		diff_x = -diff_x;
 	plotlinechoice(fdf, diff_x, diff_y);
 }

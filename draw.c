@@ -6,7 +6,7 @@
 /*   By: long <long@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 01:58:55 by long              #+#    #+#             */
-/*   Updated: 2024/01/26 02:07:42 by long             ###   ########.fr       */
+/*   Updated: 2024/01/26 02:24:48 by long             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,13 +104,13 @@ void	draw_xy(t_fdf *fdf)
 			{
 				fdf->a = fdf->matrix[i][j];
 				fdf->b = fdf->matrix[i + 1][j];
-				plotLine(&fdf);
+				plotline(&fdf);
 			}
 			if (j + 1 != fdf->width)
 			{
 				fdf->a = fdf->matrix[i][j];
 				fdf->b = fdf->matrix[i][j + 1];
-				plotLine(&fdf);
+				plotline(&fdf);
 			}
 		}
 	}

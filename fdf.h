@@ -6,14 +6,13 @@
 /*   By: long <long@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 02:09:42 by long              #+#    #+#             */
-/*   Updated: 2024/01/26 02:13:19 by long             ###   ########.fr       */
+/*   Updated: 2024/01/26 02:22:23 by long             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
 
-# define ABS(x) (x < 0) ? -x : x
 # define RIGHT_KEY 124
 # define LEFT_KEY 123
 # define UP_KEY 126
