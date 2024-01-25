@@ -2,15 +2,12 @@ NAME = fdf
 CC = gcc
 AR = ar -rc
 RM = rm -f
-SRCS = test.c
+SRCS = fdf.c matrix.c keys.c plot.c draw.c utils_1.c utils_2.c
 LIBFT_PATH = ./libft/
 LIBFT = $(LIBFT_PATH)libft.a
-CFLAGS = -fsanitize=address -Wall -Wextra -Werror -Imlx -o process
-# CFLAGS = -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -Imlx -o process
 OPTION = -I ./
 MLXFLAGS = -Lmlx -lmlx -framework OpenGL -framework AppKit
-# MLXFLAGS = -Lmlx/minilibx_macos/ -lmlx -framework OpenGL -framework AppKit
-# MLXFLAGS = -L /usr/local/lib -lmlx -framework OpenGL -framework AppKit
 
 OBJS = $(SRCS:.c=.o)
 
