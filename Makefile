@@ -5,7 +5,7 @@ RM = rm -f
 SRCS = test.c
 LIBFT_PATH = ./libft/
 LIBFT = $(LIBFT_PATH)libft.a
-CFLAGS = -Wall -Wextra -Werror -Imlx -o process
+CFLAGS = -fsanitize=address -Wall -Wextra -Werror -Imlx -o process
 # CFLAGS = -fsanitize=address
 OPTION = -I ./
 MLXFLAGS = -Lmlx -lmlx -framework OpenGL -framework AppKit

@@ -1,5 +1,5 @@
-// #include <mlx.h>
-#include "mlx/minilibx_macos/mlx.h"
+#include <mlx.h>
+// #include "mlx/minilibx_macos/mlx.h"
 #include "libft/includes/ft_printf.h"
 #include "libft/includes/libft.h"
 #include "libft/includes/get_next_line.h"
@@ -299,6 +299,7 @@ void print_color(t_fdf *fdf, int *i)
 	int j;
 
 	j = -1;
+	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++(*i) * 15), 0x00ff00, "");
 	print_string(++(*i), "Target of Color (0-9): ", fdf, fdf->palette_idx + 1);
 	print_string(++(*i), "Change of Color (\\): ", fdf, fdf->palette_sign);
 	while (++j < fdf->palette_type)
@@ -312,6 +313,8 @@ void print_color(t_fdf *fdf, int *i)
 			print_string(++(*i), "B-color: ", fdf, fdf->palette_update[j] & 0xFF);
 		}
 	}
+	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++(*i) * 15), 0x00ff00, "ENTER Key to Invert Color");
+	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++(*i) * 15), 0x00ff00, "");
 }
 
 void	menu(t_fdf *fdf)
@@ -410,7 +413,7 @@ int	draw(t_fdf *fdf)
 	return (0);
 }
 
-void handle_numsnexit(int key, t_fdf **fdf)
+void handle_nums(int key, t_fdf **fdf)
 {
 	if (key == ONE_KEY && (*fdf)->palette_type >= 1 && (*fdf)->print_flat == 0)
 		(*fdf)->palette_idx = 0;
@@ -432,11 +435,6 @@ void handle_numsnexit(int key, t_fdf **fdf)
 		(*fdf)->palette_idx = 8;
 	if (key == ZERO_KEY && (*fdf)->palette_type >= 10)
 		(*fdf)->palette_idx = 9;
-	if (key == ESC_KEY)
-	{
-		mlx_destroy_window((*fdf)->mlx, (*fdf)->win);
-		exit(EXIT_SUCCESS);
-	}
 }
 
 void handle_orientation(int key, t_fdf **fdf)
@@ -501,7 +499,12 @@ int	handle_keys(int key, t_fdf **fdf)
 		(*fdf)->projection = 'o';
 	if (key == SPACE_KEY)
 		init_fdf(fdf);
-	handle_numsnexit(key, fdf);
+	if (key == ESC_KEY)
+	{
+		mlx_destroy_window((*fdf)->mlx, (*fdf)->win);
+		exit(EXIT_SUCCESS);
+	}
+	handle_nums(key, fdf);
 	handle_orientation(key, fdf);
 	handle_colornmove(key, fdf);
 	mlx_clear_window((*fdf)->mlx, (*fdf)->win);
@@ -529,100 +532,155 @@ int	check_color(t_fdf **fdf, int *idx, int trgb)
 	return((*idx)++);
 }
 
-int	main(int ac, char **av)
+void check_width(t_fdf **fdf, t_gnl_list *node)
 {
-	t_fdf	*fdf;
-	int fd;
+	char	**splitstr;
+	int		i;
+
+	i = -1;
+	splitstr = ft_split(node->str, ' ');
+	while (splitstr[++i])
+		free(splitstr[i]);
+	free(splitstr);
+	if (!(*fdf)->width)
+		(*fdf)->width = i;
+	else
+	{
+		if ((*fdf)->width != i)
+		{
+			perror("Width not tallied");
+			exit(EXIT_FAILURE);
+		}
+	}
+}
+
+void read_map(int fd, t_gnl_list **input, t_fdf **fdf)
+{
+	char		*str;
+	t_gnl_list	*node;
+
+	str = get_next_line(fd);
+	while (str)
+	{
+		node = (t_gnl_list *)malloc(sizeof(t_gnl_list));
+		if (!node)
+		{
+			perror("Malloc node failed.");
+			exit(EXIT_FAILURE);
+		}
+		node->str = ft_strdup(str);
+		node->next = NULL;
+		check_width(fdf, node);
+		ft_lstadd_back_gnl(input, node);
+		free(str);
+		str = get_next_line(fd);
+	}
+	(*fdf)->height = ft_lstsize_gnl(*input);
+}
+
+void check_flatnalt(t_fdf **fdf, int i, int j)
+{
+	if ((*fdf)->matrix[i][j].z == 0)
+	{
+		(*fdf)->print_flat = 0;
+		(*fdf)->matrix[i][j].color = 0;
+	}
+	else
+	{
+		(*fdf)->print_alt = 0;
+		(*fdf)->matrix[i][j].color = 1;
+	}
+}
+
+void fill_matrix(t_fdf **fdf, int i, int *idx, t_gnl_list *input)
+{
+	char		**splitstr;
+	int			j;
+	char		*color;
+
+	splitstr = ft_split(input->str, ' ');
+	j = -1;
+	while (++j < (*fdf)->width)
+	{
+		(*fdf)->matrix[i][j].x = j;
+		(*fdf)->matrix[i][j].y = i;
+		(*fdf)->matrix[i][j].z = ft_atoi(splitstr[j]);
+		color = ft_strchr(splitstr[j], ',');
+		if (color)
+			(*fdf)->matrix[i][j].color = check_color(fdf, idx, ft_atoh(&color[3]));
+		else
+			check_flatnalt(fdf, i, j);
+		free(splitstr[j]);
+	}
+	free(splitstr);
+}
+
+void do_matrix(t_fdf **fdf, t_gnl_list *input)
+{
+	int			i;
+	int			idx;
+
+	i = -1;
+	(*fdf)->print_flat = 1;
+	(*fdf)->print_alt = 1;
+	idx = 2;
+	(*fdf)->palette_type = 2;
+	while (++i < (*fdf)->height)
+	{
+		(*fdf)->matrix[i] = (t_point *) malloc(sizeof(t_point) * (*fdf)->width);
+		if (!(*fdf)->matrix[i])
+		{
+			perror("Malloc fdf->matrix[i] failed.");
+			exit(EXIT_FAILURE);
+		}
+		fill_matrix(fdf, i, &idx, input);
+		input = input->next;
+	}
+	(*fdf)->matrix = (t_point **) malloc(sizeof(t_point *) * (*fdf)->height);
+	if (!(*fdf)->matrix)
+	{
+		perror("Malloc fdf->matrix failed.");
+		exit(EXIT_FAILURE);
+	}
+}
+
+int error_handle(int ac, char **av)
+{
+	int	fd;
 
 	if (ac != 2)
 	{
 		perror("Usage: ./fdf test_map");
 		exit(EXIT_FAILURE);
 	}
-	fdf = (t_fdf *)malloc(sizeof(t_fdf));
-	if (!fdf)
-	{
-		perror("Malloc fdf failed");
-		exit(EXIT_FAILURE);
-	}
-	fdf->mlx = mlx_init();
-	fdf->win = mlx_new_window(fdf->mlx, WIDTH, HEIGHT, "FDF");
 	fd = open(av[1], O_RDONLY);
 	if (fd == -1)
 	{
 		perror("File cannot be open");
 		exit(EXIT_FAILURE);
 	}
-	char *str = get_next_line(fd);
-	t_gnl_list	*input = NULL;
-	t_gnl_list *node;
-	char	**splitstr;
-	int		i;
+	return (fd);
+}
+
+int	main(int ac, char **av)
+{
+	t_fdf		*fdf;
+	int			fd;
+	t_gnl_list	*input;
+
+	fd = error_handle(ac, av);
+	fdf = (t_fdf *)malloc(sizeof(t_fdf));
+	if (!fdf)
+	{
+		perror("Malloc fdf failed");
+		exit(EXIT_FAILURE);
+	}
+	input = NULL;
 	fdf->width = 0;
-	while (str)
-	{
-		i = -1;
-		node = (t_gnl_list *)malloc(sizeof(t_gnl_list));
-		node->str = ft_strdup(str);
-		node->next = NULL;
-		splitstr = ft_split(node->str, ' ');
-		while (splitstr[++i])
-			free(splitstr[i]);
-		free(splitstr);
-		if (!fdf->width)
-			fdf->width = i;
-		else
-		{
-			if (fdf->width != i)
-			{
-				perror("Width not tallied");
-				exit(EXIT_FAILURE);
-			}
-		}
-		ft_lstadd_back_gnl(&input, node);
-		free(str);
-		str = get_next_line(fd);
-	}
-	fdf->height = ft_lstsize_gnl(input);
-	fdf->matrix = (t_point **) malloc(sizeof(t_point *) * fdf->height);
-	i = -1;
-	fdf->print_flat = 1;
-	fdf->print_alt = 1;
-	int j;
-	int	idx = 2;
-	fdf->palette_type = 2;
-	node = input;
-	while (++i < fdf->height)
-	{
-		j = -1;
-		fdf->matrix[i] = (t_point *) malloc(sizeof(t_point) * fdf->width);
-		splitstr = ft_split(node->str, ' ');
-		while (++j < fdf->width)
-		{
-			fdf->matrix[i][j].x = j;
-			fdf->matrix[i][j].y = i;
-			fdf->matrix[i][j].z = ft_atoi(splitstr[j]);
-			char	*color = ft_strchr(splitstr[j], ',');
-			if (color)
-				fdf->matrix[i][j].color = check_color(&fdf, &idx, ft_atoh(&color[3]));
-			else
-			{
-				if (fdf->matrix[i][j].z == 0)
-				{
-					fdf->print_flat = 0;
-					fdf->matrix[i][j].color = 0;
-				}
-				else
-				{
-					fdf->print_alt = 0;
-					fdf->matrix[i][j].color = 1;
-				}
-			}
-			free(splitstr[j]);
-		}
-		free(splitstr);
-		node = node->next;
-	}
+	read_map(fd, &input, &fdf);
+	do_matrix(&fdf, input);
+	fdf->mlx = mlx_init();
+	fdf->win = mlx_new_window(fdf->mlx, WIDTH, HEIGHT, "FDF");
 	init_fdf(&fdf);
 	draw(fdf);
 	mlx_key_hook(fdf->win, handle_keys, &fdf);
