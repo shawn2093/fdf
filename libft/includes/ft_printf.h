@@ -6,18 +6,18 @@
 /*   By: long <long@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 01:47:28 by long              #+#    #+#             */
-/*   Updated: 2023/12/30 21:54:52 by long             ###   ########.fr       */
+/*   Updated: 2024/01/26 02:35:14 by long             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
-# if defined (__linux__)
-#  define PTRNULL "(nil)"
-# elif defined (__APPLE__)
-#  define PTRNULL "0x0"
-# endif
+// # if defined (__linux__)
+// #  define PTRNULL "(nil)"
+// # elif defined (__APPLE__)
+// #  define PTRNULL "0x0"
+// # endif
 
 # include "libft.h"
 # include <stdarg.h>

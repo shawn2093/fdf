@@ -6,7 +6,7 @@
 /*   By: long <long@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 23:00:08 by long              #+#    #+#             */
-/*   Updated: 2024/01/01 03:20:52 by long             ###   ########.fr       */
+/*   Updated: 2024/01/26 02:32:56 by long             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,10 @@ void	make_new(t_gnl_list **bufstr, char *str)
 
 void	clean_list(t_gnl_list **bufstr)
 {
-	int		i;
-	int		k;
+	int			i;
+	int			k;
 	t_gnl_list	*tmp;
-	char	*str;
+	char		*str;
 
 	if (!bufstr || !*bufstr)
 		return ;

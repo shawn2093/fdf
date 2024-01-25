@@ -6,7 +6,7 @@
 /*   By: long <long@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 23:00:38 by long              #+#    #+#             */
-/*   Updated: 2024/01/01 05:20:14 by long             ###   ########.fr       */
+/*   Updated: 2024/01/26 02:32:41 by long             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ char	*fill_letters(t_gnl_list *bufstr, int len)
 
 char	*get_line(t_gnl_list *bufstr)
 {
-	int		count;
+	int			count;
 	t_gnl_list	*tmp;
-	int		i;
-	int		len;
+	int			i;
+	int			len;
 
 	count = ft_lstsize_gnl(bufstr);
 	tmp = ft_lstlast_gnl(bufstr);
@@ -59,7 +59,7 @@ char	*get_line(t_gnl_list *bufstr)
 int	found_nl(t_gnl_list **bufstr)
 {
 	t_gnl_list	*tmp;
-	int		i;
+	int			i;
 
 	tmp = *bufstr;
 	while (tmp)
@@ -77,8 +77,8 @@ int	found_nl(t_gnl_list **bufstr)
 
 void	create_list(int fd, t_gnl_list **bufstr)
 {
-	char	*str;
-	size_t	buf;
+	char		*str;
+	size_t		buf;
 	t_gnl_list	*tmp;
 
 	while (!found_nl(bufstr))
@@ -102,7 +102,7 @@ void	create_list(int fd, t_gnl_list **bufstr)
 
 char	*get_next_line(int fd)
 {
-	char			*str;
+	char				*str;
 	static t_gnl_list	*bufstr[FOPEN_MAX];
 
 	if (fd < 0 || fd >= FOPEN_MAX || BUFFER_SIZE <= 0 || read(fd, &str, 0) < 0)

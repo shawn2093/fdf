@@ -6,7 +6,7 @@
 /*   By: long <long@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:12:17 by long              #+#    #+#             */
-/*   Updated: 2023/11/30 11:10:54 by long             ###   ########.fr       */
+/*   Updated: 2024/01/26 02:32:08 by long             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,3 @@ char	*ft_strtrim(char const *s1, char const *set)
 		ft_strlcpy(str, &ptr[0], end + 1);
 	return (str);
 }
-
