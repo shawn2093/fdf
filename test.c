@@ -335,55 +335,9 @@ void	menu(t_fdf *fdf)
 	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "O: oblique projection");
 	print_string(++i, "Current projection: ", fdf, fdf->projection);
 	print_color(fdf, &i);
-	// print_string(++i, "Target of Color (0-9): ", fdf, fdf->palette_idx + 1);
-	// print_string(++i, "Change of Color (\\): ", fdf, fdf->palette_sign);
-	// while (++j < fdf->palette_type)
-	// {
-	// 	if (!((j == 0 && fdf->print_flat == 1) || (j == 1 && fdf->print_alt == 1)))
-	// 	{
-	// 		print_string(++i, "Details of Color ", fdf, j + 1);
-	// 		print_string(++i, "Transparency: ", fdf, (fdf->palette_update[j] >> 24) & 0xFF);
-	// 		print_string(++i, "R-color: ", fdf, (fdf->palette_update[j] >> 16) & 0xFF);
-	// 		print_string(++i, "G-color: ", fdf, (fdf->palette_update[j] >> 8) & 0xFF);
-	// 		print_string(++i, "B-color: ", fdf, fdf->palette_update[j] & 0xFF);
-	// 	}
-	// }
 	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "SPACE Key to Reset");
 	mlx_string_put(fdf->mlx, fdf->win, 5, 5 + (++i * 15), 0x00ff00, "ESC Key to Exit");
 }
-
-// void update_color(int trgb, char c, t_fdf **fdf)
-// {
-// 	int	t;
-// 	int	r;
-// 	int	g;
-// 	int	b;
-// 	int	tmp_t;
-
-// 	t = (trgb >> 24) & 0xFF;
-// 	r = (trgb >> 16) & 0xFF;
-// 	g = (trgb >> 8) & 0xFF;
-// 	b = trgb & 0xFF;
-// 	tmp_t = t;
-// 	if (c == 't')
-// 		t = t + (*fdf)->palette_sign;
-// 	else if (c == 'r')
-// 	{
-// 		r = r + (*fdf)->palette_sign;
-// 		t = tmp_t;
-// 	}
-// 	else if (c == 'g')
-// 	{
-// 		g = g + (*fdf)->palette_sign;
-// 		t = tmp_t;
-// 	}
-// 	else if (c == 'b')
-// 	{
-// 		b = b + (*fdf)->palette_sign;
-// 		t = tmp_t;
-// 	}
-// 	(*fdf)->palette_update[(*fdf)->palette_idx] = (t << 24 | r << 16 | g << 8 | b);
-// }
 
 void update_color(int trgb, char c, t_fdf **fdf)
 {
@@ -417,14 +371,11 @@ void invert_color(int trgb, t_fdf **fdf)
 	(*fdf)->palette_update[(*fdf)->palette_idx] = neg;
 }
 
-int	draw(t_fdf *fdf)
+void drawXY(t_fdf *fdf)
 {
 	int	i;
 	int	j;
 
-	fdf->img.mlx_img = mlx_new_image(fdf->mlx, WIDTH, HEIGHT);
-	fdf->img.addr = mlx_get_data_addr(fdf->img.mlx_img, &(fdf->img.bpp), &(fdf->img.line_len), &(fdf->img.endian));
-	mlx_clear_window(fdf->mlx, fdf->win);
 	i = -1;
 	while (++i < fdf->height)
 	{
@@ -445,23 +396,51 @@ int	draw(t_fdf *fdf)
 			}
 		}
 	}
+}
+
+int	draw(t_fdf *fdf)
+{
+	fdf->img.mlx_img = mlx_new_image(fdf->mlx, WIDTH, HEIGHT);
+	fdf->img.addr = mlx_get_data_addr(fdf->img.mlx_img, &(fdf->img.bpp), &(fdf->img.line_len), &(fdf->img.endian));
+	mlx_clear_window(fdf->mlx, fdf->win);
+	drawXY(fdf);
 	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img.mlx_img, 0, 0);
 	mlx_destroy_image(fdf->mlx, fdf->img.mlx_img);
 	menu(fdf);
 	return (0);
 }
 
-int	handle_keys(int key, t_fdf **fdf)
+void handle_numsnexit(int key, t_fdf **fdf)
 {
-	printf("%d\n", key);
-	if (key == LEFT_KEY)
-		(*fdf)->move_x -= 10;
-	if (key == RIGHT_KEY)
-		(*fdf)->move_x += 10;
-	if (key == UP_KEY)
-		(*fdf)->move_y -= 10;
-	if (key == DOWN_KEY)
-		(*fdf)->move_y += 10;
+	if (key == ONE_KEY && (*fdf)->palette_type >= 1 && (*fdf)->print_flat == 0)
+		(*fdf)->palette_idx = 0;
+	if (key == TWO_KEY && (*fdf)->palette_type >= 2 && (*fdf)->print_alt == 0)
+		(*fdf)->palette_idx = 1;
+	if (key == THREE_KEY && (*fdf)->palette_type >= 3)
+		(*fdf)->palette_idx = 2;
+	if (key == FOUR_KEY && (*fdf)->palette_type >= 4)
+		(*fdf)->palette_idx = 3;
+	if (key == FIVE_KEY && (*fdf)->palette_type >= 5)
+		(*fdf)->palette_idx = 4;
+	if (key == SIX_KEY && (*fdf)->palette_type >= 6)
+		(*fdf)->palette_idx = 5;
+	if (key == SEVEN_KEY && (*fdf)->palette_type >= 7)
+		(*fdf)->palette_idx = 6;
+	if (key == EIGHT_KEY && (*fdf)->palette_type >= 8)
+		(*fdf)->palette_idx = 7;
+	if (key == NINE_KEY && (*fdf)->palette_type >= 9)
+		(*fdf)->palette_idx = 8;
+	if (key == ZERO_KEY && (*fdf)->palette_type >= 10)
+		(*fdf)->palette_idx = 9;
+	if (key == ESC_KEY)
+	{
+		mlx_destroy_window((*fdf)->mlx, (*fdf)->win);
+		exit(EXIT_SUCCESS);
+	}
+}
+
+void handle_orientation(int key, t_fdf **fdf)
+{
 	if (key == PLUS_KEY)
 		(*fdf)->scale += 1;
 	if (key == MINUS_KEY && (*fdf)->scale > 0)
@@ -486,12 +465,20 @@ int	handle_keys(int key, t_fdf **fdf)
 		(*fdf)->angle -= 0.1;
 	if (key == X_KEY)
 		(*fdf)->angle += 0.1;
-	if (key == I_KEY)
-		(*fdf)->projection = 'i';
-	if (key == C_KEY)
-		(*fdf)->projection = 'c';
-	if (key == O_KEY)
-		(*fdf)->projection = 'o';
+}
+
+void handle_colornmove(int key, t_fdf **fdf)
+{
+	if (key == LEFT_KEY)
+		(*fdf)->move_x -= 10;
+	if (key == RIGHT_KEY)
+		(*fdf)->move_x += 10;
+	if (key == UP_KEY)
+		(*fdf)->move_y -= 10;
+	if (key == DOWN_KEY)
+		(*fdf)->move_y += 10;
+	if (key == BACKSLASH_KEY)
+		(*fdf)->palette_sign *= -1;
 	if (key == R_KEY)
 		update_color((*fdf)->palette_update[(*fdf)->palette_idx], 'r', fdf);
 	if (key == G_KEY)
@@ -502,35 +489,21 @@ int	handle_keys(int key, t_fdf **fdf)
 		update_color((*fdf)->palette_update[(*fdf)->palette_idx], 't', fdf);
 	if (key == ENTER_KEY)
 		invert_color((*fdf)->palette_update[(*fdf)->palette_idx], fdf);
-	if (key == ONE_KEY && (*fdf)->palette_type >= 1 && (*fdf)->print_flat == 0)
-		(*fdf)->palette_idx = 0;
-	if (key == TWO_KEY && (*fdf)->palette_type >= 2 && (*fdf)->print_alt == 0)
-		(*fdf)->palette_idx = 1;
-	if (key == THREE_KEY && (*fdf)->palette_type >= 3)
-		(*fdf)->palette_idx = 2;
-	if (key == FOUR_KEY && (*fdf)->palette_type >= 4)
-		(*fdf)->palette_idx = 3;
-	if (key == FIVE_KEY && (*fdf)->palette_type >= 5)
-		(*fdf)->palette_idx = 4;
-	if (key == SIX_KEY && (*fdf)->palette_type >= 6)
-		(*fdf)->palette_idx = 5;
-	if (key == SEVEN_KEY && (*fdf)->palette_type >= 7)
-		(*fdf)->palette_idx = 6;
-	if (key == EIGHT_KEY && (*fdf)->palette_type >= 8)
-		(*fdf)->palette_idx = 7;
-	if (key == NINE_KEY && (*fdf)->palette_type >= 9)
-		(*fdf)->palette_idx = 8;
-	if (key == ZERO_KEY && (*fdf)->palette_type >= 10)
-		(*fdf)->palette_idx = 9;
-	if (key == BACKSLASH_KEY)
-		(*fdf)->palette_sign *= -1;
+}
+
+int	handle_keys(int key, t_fdf **fdf)
+{
+	if (key == I_KEY)
+		(*fdf)->projection = 'i';
+	if (key == C_KEY)
+		(*fdf)->projection = 'c';
+	if (key == O_KEY)
+		(*fdf)->projection = 'o';
 	if (key == SPACE_KEY)
 		init_fdf(fdf);
-	if (key == ESC_KEY)
-	{
-		mlx_destroy_window((*fdf)->mlx, (*fdf)->win);
-		exit(EXIT_SUCCESS);
-	}
+	handle_numsnexit(key, fdf);
+	handle_orientation(key, fdf);
+	handle_colornmove(key, fdf);
 	mlx_clear_window((*fdf)->mlx, (*fdf)->win);
 	draw(*fdf);
 	return (0);
