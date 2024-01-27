@@ -6,7 +6,7 @@
 /*   By: long <long@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 02:09:42 by long              #+#    #+#             */
-/*   Updated: 2024/01/26 02:22:23 by long             ###   ########.fr       */
+/*   Updated: 2024/01/27 17:14:29 by long             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,7 @@ void		draw_xy(t_fdf *fdf);
 int			draw(t_fdf *fdf);
 
 // keys.c
+int			mlx_close(t_fdf **fdf);
 void		handle_nums(int key, t_fdf **fdf);
 void		handle_orientation(int key, t_fdf **fdf);
 void		handle_colornmove(int key, t_fdf **fdf);

@@ -6,7 +6,7 @@
 /*   By: long <long@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 01:58:49 by long              #+#    #+#             */
-/*   Updated: 2024/01/26 01:58:50 by long             ###   ########.fr       */
+/*   Updated: 2024/01/27 17:14:13 by long             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,7 @@ int	main(int ac, char **av)
 	fdf->win = mlx_new_window(fdf->mlx, WIDTH, HEIGHT, "FDF");
 	init_fdf(&fdf);
 	draw(fdf);
+	mlx_hook(fdf->win, 17, 0, mlx_close, &fdf);
 	mlx_key_hook(fdf->win, handle_keys, &fdf);
 	mlx_loop(fdf->mlx);
 	return (0);
