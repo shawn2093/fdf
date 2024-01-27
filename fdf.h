@@ -6,7 +6,7 @@
 /*   By: long <long@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 02:09:42 by long              #+#    #+#             */
-/*   Updated: 2024/01/27 17:14:29 by long             ###   ########.fr       */
+/*   Updated: 2024/01/27 17:25:42 by long             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@
 # define ZERO_KEY 29
 # define BACKSLASH_KEY 42
 # define ENTER_KEY 36
+# define ON_DESTROY 17
 # define WIDTH 1920
 # define HEIGHT 1080
 
