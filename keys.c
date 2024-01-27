@@ -6,13 +6,13 @@
 /*   By: long <long@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 01:58:35 by long              #+#    #+#             */
-/*   Updated: 2024/01/27 17:13:58 by long             ###   ########.fr       */
+/*   Updated: 2024/01/27 17:23:53 by long             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int mlx_close(t_fdf **fdf)
+int	mlx_close(t_fdf **fdf)
 {
 	mlx_destroy_window((*fdf)->mlx, (*fdf)->win);
 	exit(EXIT_SUCCESS);
